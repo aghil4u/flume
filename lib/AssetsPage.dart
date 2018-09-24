@@ -28,7 +28,7 @@ class _AssetsPageState extends State<AssetsPage> {
       await db.GetEquipmentsFromServer();
       await db.SaveEquipmentToStorage();
     }
-
+    await Future.delayed(Duration(milliseconds: 20));
     setState(() {
       equipment = db.Equipments;
     });
@@ -180,9 +180,9 @@ class CustomBottomAppBarDrawer extends StatelessWidget {
     );
   }
 
-  Future<bool> RefreshDatabase()  async{
+  Future<bool> RefreshDatabase() async {
     await db.DeleteRecords();
-   await db.GetEquipmentsFromServer();
-      await db.SaveEquipmentToStorage();
+    await db.GetEquipmentsFromServer();
+    await db.SaveEquipmentToStorage();
   }
 }
