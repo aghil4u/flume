@@ -11,12 +11,10 @@ class AssetsPage extends StatefulWidget {
 }
 
 class _AssetsPageState extends State<AssetsPage> {
-  @override
-  void initState() {
-    super.initState();
-    refreshKey.currentState?.show();
-    this.refreshList();
-  }
+ // @override
+  // void initState() {
+  //   super.initState();
+  // }
 
   Future<List<Equipment>> refreshList() async {
     if (await db.GetEquipmentsFromStorage() == false) {
