@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 import 'AssetDetailsPage.dart';
 import 'Model/Equipment.dart';
 import 'Model/db.dart';
 
-List<Equipment> equipment;
 var refreshKey = GlobalKey<RefreshIndicatorState>();
 
 class AssetsPage extends StatefulWidget {
@@ -14,8 +11,6 @@ class AssetsPage extends StatefulWidget {
 }
 
 class _AssetsPageState extends State<AssetsPage> {
-  final String url = "http://xo.rs/api/Equipments";
-
   @override
   void initState() {
     super.initState();
@@ -23,17 +18,13 @@ class _AssetsPageState extends State<AssetsPage> {
     this.refreshList();
   }
 
-  Future<String> refreshList() async {
+  Future<List<Equipment>> refreshList() async {
     if (await db.GetEquipmentsFromStorage() == false) {
       await db.GetEquipmentsFromServer();
       await db.SaveEquipmentToStorage();
     }
-    await Future.delayed(Duration(milliseconds: 20));
-    setState(() {
-      equipment = db.Equipments;
-    });
-
-    return "Success";
+    await Future.delayed(Duration(seconds: 1));
+    return db.Equipments;
   }
 
   @override
@@ -53,27 +44,35 @@ class _AssetsPageState extends State<AssetsPage> {
           ),
         ],
       ),
-      body: RefreshIndicator(
-        key: refreshKey,
-        child: new ListView.builder(
-          physics: const AlwaysScrollableScrollPhysics(),
-          itemCount: equipment == null ? 0 : equipment.length,
-          itemBuilder: (BuildContext context, int index) {
-            return new ListTile(
-              title: new Text(equipment[index].EquipmentNumber),
-              subtitle: Text(equipment[index].EquipmentDescription),
-              leading: CircleAvatar(
-                child: Text(index.toString()),
-              ),
-              onTap: () {
-                Navigator.of(context).push(new MaterialPageRoute(
-                    builder: (BuildContext) =>
-                        new AssetDetailsPage(equipment: equipment[index])));
+      body: FutureBuilder<List<Equipment>>(
+        future: refreshList(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            var equipment = snapshot.data;
+            return new ListView.builder(
+              physics: const AlwaysScrollableScrollPhysics(),
+              itemCount: equipment == null ? 0 : equipment.length,
+              itemBuilder: (BuildContext context, int index) {
+                return new ListTile(
+                  title: new Text(equipment[index].EquipmentNumber),
+                  subtitle: Text(equipment[index].EquipmentDescription),
+                  leading: CircleAvatar(
+                    child: Text(index.toString()),
+                  ),
+                  onTap: () {
+                    Navigator.of(context).push(new MaterialPageRoute(
+                        builder: (BuildContext) =>
+                            new AssetDetailsPage(equipment: equipment[index])));
+                  },
+                );
               },
             );
-          },
-        ),
-        onRefresh: refreshList,
+          } else {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: null,
