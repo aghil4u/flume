@@ -5,24 +5,28 @@ import 'Model/Equipment.dart';
 import 'Model/db.dart';
 
 var refreshKey = GlobalKey<RefreshIndicatorState>();
+List<Equipment> Equipments;
 
 class AssetsPage extends StatefulWidget {
   _AssetsPageState createState() => _AssetsPageState();
 }
 
 class _AssetsPageState extends State<AssetsPage> {
- // @override
-  // void initState() {
-  //   super.initState();
-  // }
+  final _SearchDemoSearchDelegate _delegate = new _SearchDemoSearchDelegate();
+  Equipment _LastEquipmentSelected;
 
   Future<List<Equipment>> refreshList() async {
-    if (await db.GetEquipmentsFromStorage() == false) {
-      await db.GetEquipmentsFromServer();
-      await db.SaveEquipmentToStorage();
+    if (Equipments == null) {
+      await Future.delayed(Duration(seconds: 1));
+
+      if (await db.GetEquipmentsFromStorage() == false) {
+        await db.GetEquipmentsFromServer();
+        await db.SaveEquipmentToStorage();
+      }
+      Equipments = db.Equipments;
     }
-    await Future.delayed(Duration(seconds: 1));
-    return db.Equipments;
+
+    return Equipments;
   }
 
   @override
@@ -32,13 +36,19 @@ class _AssetsPageState extends State<AssetsPage> {
         title: new Text("ASSET MASTER"),
         actions: <Widget>[
           new IconButton(
-            tooltip: 'More (not implemented)',
-            icon: new Icon(
-              Theme.of(context).platform == TargetPlatform.iOS
-                  ? Icons.more_horiz
-                  : Icons.more_vert,
-            ),
-            onPressed: () {},
+            tooltip: 'Search',
+            icon: const Icon(Icons.search),
+            onPressed: () async {
+              final Equipment selected = await showSearch<Equipment>(
+                context: context,
+                delegate: _delegate,
+              );
+              if (selected != null && selected != _LastEquipmentSelected) {
+                setState(() {
+                  _LastEquipmentSelected = selected;
+                });
+              }
+            },
           ),
         ],
       ),
@@ -53,7 +63,7 @@ class _AssetsPageState extends State<AssetsPage> {
               itemBuilder: (BuildContext context, int index) {
                 return new ListTile(
                   title: new Text(equipment[index].EquipmentNumber),
-                  subtitle: Text(equipment[index].EquipmentDescription),
+                  subtitle: Text(equipment[index].AssetDescription),
                   leading: CircleAvatar(
                     child: Text(index.toString()),
                   ),
@@ -73,8 +83,13 @@ class _AssetsPageState extends State<AssetsPage> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: null,
-        child: Icon(Icons.add),
+        onPressed: () {
+          showModalBottomSheet<Null>(
+            context: context,
+            builder: (BuildContext context) => const SearchDrawer(),
+          );
+        },
+        child: Icon(Icons.adjust),
         backgroundColor: Colors.deepPurple,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
@@ -87,7 +102,157 @@ class _AssetsPageState extends State<AssetsPage> {
   }
 }
 
-//------------------------------------  SAVE AND RETRIVE JSON FILE  ------------------
+//------------------------------------  Search  ------------------
+
+class _SearchDemoSearchDelegate extends SearchDelegate<Equipment> {
+  final List<Equipment> _history = <Equipment>[];
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    return new IconButton(
+      tooltip: 'Back',
+      icon: new AnimatedIcon(
+        icon: AnimatedIcons.menu_arrow,
+        progress: transitionAnimation,
+      ),
+      onPressed: () {
+        close(context, null);
+      },
+    );
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    final Iterable<Equipment> suggestions =
+        query.isEmpty ? _history : SearchEquipments(query);
+    return new _SuggestionList(
+      query: query,
+      suggestions: suggestions.toList(),
+      onSelected: (String suggestion) {
+        query = suggestion;
+        showResults(context);
+      },
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    final List<Equipment> finalequip = SearchEquipments(query);
+
+    if (finalequip == null || finalequip.length < 0) {
+      return new Center(
+        child: new Text(
+          "Your Search Returned no Results",
+          textAlign: TextAlign.center,
+        ),
+      );
+    }
+    final ThemeData theme = Theme.of(context);
+    return new ListView.builder(
+      itemCount: finalequip.length,
+      itemBuilder: (BuildContext context, int i) {
+        final Equipment suggestion = finalequip[i];
+        return new ListTile(
+          leading: query.isEmpty ? const Icon(Icons.history) : const Icon(null),
+          title: new RichText(
+            text: new TextSpan(
+              text: suggestion.AssetDescription.substring(0, query.length),
+              style:
+                  theme.textTheme.subhead.copyWith(fontWeight: FontWeight.bold),
+              children: <TextSpan>[
+                new TextSpan(
+                  text: suggestion.AssetDescription.substring(query.length),
+                  style: theme.textTheme.subhead,
+                ),
+              ],
+            ),
+          ),
+          onTap: () {
+            this.close(context, finalequip[i]);
+            Navigator.of(context).push(new MaterialPageRoute(
+                builder: (BuildContext) =>
+                    new AssetDetailsPage(equipment: finalequip[i])));
+          },
+        );
+      },
+    );
+  }
+
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    return <Widget>[
+      query.isEmpty
+          ? new IconButton(
+              tooltip: 'Voice Search',
+              icon: const Icon(Icons.mic),
+              onPressed: () {
+                query = 'TODO: implement voice input';
+              },
+            )
+          : new IconButton(
+              tooltip: 'Clear',
+              icon: const Icon(Icons.clear),
+              onPressed: () {
+                query = '';
+                showSuggestions(context);
+              },
+            )
+    ];
+  }
+
+  List<Equipment> SearchEquipments(String sq) {
+    if (sq != null) {
+      var ss = Equipments.where((Equipment i) =>
+          (i != null &&
+              i.AssetDescription != null &&
+              i.AssetDescription.toLowerCase().contains(sq.toLowerCase())) ||
+          (i!=null && i.OperationId!=null && i.OperationId.toLowerCase().contains(sq.toLowerCase())));
+    
+    if (ss != null) {
+      return ss.toList();
+    }
+    }
+    return null;
+  }
+}
+
+class _SuggestionList extends StatelessWidget {
+  const _SuggestionList({this.suggestions, this.query, this.onSelected});
+
+  final List<Equipment> suggestions;
+  final String query;
+  final ValueChanged<String> onSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    return new ListView.builder(
+      itemCount: suggestions.length,
+      itemBuilder: (BuildContext context, int i) {
+        final String suggestion = suggestions[i].AssetDescription;
+        return new ListTile(
+          leading: query.isEmpty ? const Icon(Icons.history) : const Icon(null),
+          title: new RichText(
+            text: new TextSpan(
+              text: suggestion.substring(0, query.length),
+              style:
+                  theme.textTheme.subhead.copyWith(fontWeight: FontWeight.bold),
+              children: <TextSpan>[
+                new TextSpan(
+                  text: suggestion.substring(query.length),
+                  style: theme.textTheme.subhead,
+                ),
+              ],
+            ),
+          ),
+          onTap: () {
+            onSelected(suggestion);
+          },
+        );
+      },
+    );
+  }
+}
 
 //-----------------------------------------------------------------
 
@@ -112,7 +277,7 @@ class CustomBottomAppBar extends StatelessWidget {
         onPressed: () {
           showModalBottomSheet<Null>(
             context: context,
-            builder: (BuildContext context) => const CustomBottomAppBarDrawer(),
+            builder: (BuildContext context) => const CustomSettingsDrawer(),
           );
         },
       ),
@@ -155,8 +320,8 @@ class CustomBottomAppBar extends StatelessWidget {
   }
 }
 
-class CustomBottomAppBarDrawer extends StatelessWidget {
-  const CustomBottomAppBarDrawer();
+class CustomSettingsDrawer extends StatelessWidget {
+  const CustomSettingsDrawer();
 
   @override
   Widget build(BuildContext context) {
@@ -182,4 +347,183 @@ class CustomBottomAppBarDrawer extends StatelessWidget {
     await db.GetEquipmentsFromServer();
     await db.SaveEquipmentToStorage();
   }
+}
+
+class SearchDrawer extends StatelessWidget {
+  const SearchDrawer();
+
+  @override
+  Widget build(BuildContext context) {
+    return new Drawer(
+        elevation: 1.0,
+        child: ListView(
+          padding: const EdgeInsets.all(20.0),
+          children: <Widget>[
+            CheckboxListTile(
+              title: Text("WINCH UNITS"),
+              onChanged: (bool value) {
+                TypeFilter(this);
+              },
+              controlAffinity: ListTileControlAffinity.leading,
+              dense: true,
+              value: false,
+            ),
+            CheckboxListTile(
+              title: Text("POWER PACKS"),
+              onChanged: (bool value) {
+                TypeFilter(this);
+              },
+              controlAffinity: ListTileControlAffinity.leading,
+              dense: true,
+              value: false,
+            ),
+            CheckboxListTile(
+              title: Text("TRUCKS"),
+              onChanged: (bool value) {
+                TypeFilter(this);
+              },
+              controlAffinity: ListTileControlAffinity.leading,
+              dense: true,
+              value: false,
+            ),
+            CheckboxListTile(
+              title: Text("TOOL BOXES"),
+              onChanged: (bool value) {
+                TypeFilter(this);
+              },
+              controlAffinity: ListTileControlAffinity.leading,
+              dense: true,
+              value: false,
+            ),
+            CheckboxListTile(
+              title: Text("TOOL BASKETS"),
+              onChanged: (bool value) {
+                TypeFilter(this);
+              },
+              controlAffinity: ListTileControlAffinity.leading,
+              dense: true,
+              value: false,
+            ),
+            CheckboxListTile(
+              title: Text("LUBRICATORS"),
+              onChanged: (bool value) {
+                TypeFilter(this);
+              },
+              controlAffinity: ListTileControlAffinity.leading,
+              dense: true,
+              value: false,
+            ),
+            CheckboxListTile(
+              title: Text("STUFFING BOXES"),
+              onChanged: (bool value) {
+                TypeFilter(this);
+              },
+              controlAffinity: ListTileControlAffinity.leading,
+              dense: true,
+              value: false,
+            ),
+            CheckboxListTile(
+              title: Text("BLOW POUT PREVENTERS"),
+              onChanged: (bool value) {
+                TypeFilter(this);
+              },
+              controlAffinity: ListTileControlAffinity.leading,
+              dense: true,
+              value: false,
+            ),
+            CheckboxListTile(
+              title: Text("INJECTION SUBS"),
+              onChanged: (bool value) {
+                TypeFilter(this);
+              },
+              controlAffinity: ListTileControlAffinity.leading,
+              dense: true,
+              value: false,
+            ),
+            CheckboxListTile(
+              title: Text("WINCH UNITS"),
+              onChanged: (bool value) {
+                TypeFilter(this);
+              },
+              controlAffinity: ListTileControlAffinity.leading,
+              dense: true,
+              value: false,
+            ),
+            CheckboxListTile(
+              title: Text("POWER PACKS"),
+              onChanged: (bool value) {
+                TypeFilter(this);
+              },
+              controlAffinity: ListTileControlAffinity.leading,
+              dense: true,
+              value: false,
+            ),
+            CheckboxListTile(
+              title: Text("TRUCKS"),
+              onChanged: (bool value) {
+                TypeFilter(this);
+              },
+              controlAffinity: ListTileControlAffinity.leading,
+              dense: true,
+              value: false,
+            ),
+            CheckboxListTile(
+              title: Text("TOOL BOXES"),
+              onChanged: (bool value) {
+                TypeFilter(this);
+              },
+              controlAffinity: ListTileControlAffinity.leading,
+              dense: true,
+              value: false,
+            ),
+            CheckboxListTile(
+              title: Text("TOOL BASKETS"),
+              onChanged: (bool value) {
+                TypeFilter(this);
+              },
+              controlAffinity: ListTileControlAffinity.leading,
+              dense: true,
+              value: false,
+            ),
+            CheckboxListTile(
+              title: Text("LUBRICATORS"),
+              onChanged: (bool value) {
+                TypeFilter(this);
+              },
+              controlAffinity: ListTileControlAffinity.leading,
+              dense: true,
+              value: false,
+            ),
+            CheckboxListTile(
+              title: Text("STUFFING BOXES"),
+              onChanged: (bool value) {
+                TypeFilter(this);
+              },
+              controlAffinity: ListTileControlAffinity.leading,
+              dense: true,
+              value: false,
+            ),
+            CheckboxListTile(
+              title: Text("BLOW POUT PREVENTERS"),
+              onChanged: (bool value) {
+                TypeFilter(this);
+              },
+              controlAffinity: ListTileControlAffinity.leading,
+              dense: true,
+              value: false,
+            ),
+            CheckboxListTile(
+              title: Text("INJECTION SUBS"),
+              onChanged: (bool value) {
+                TypeFilter(this);
+              },
+              controlAffinity: ListTileControlAffinity.leading,
+              dense: true,
+              value: false,
+            ),
+          ],
+        ));
+  }
+
+  void TypeFilter(SearchDrawer searchDrawer) {}
 }
