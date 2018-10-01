@@ -86,7 +86,7 @@ class _AssetsPageState extends State<AssetsPage> {
         onPressed: () {
           showModalBottomSheet<Null>(
             context: context,
-            builder: (BuildContext context) => const SearchDrawer(),
+            builder: (BuildContext context) => const FilterDrawer(),
           );
         },
         child: Icon(Icons.adjust),
@@ -131,6 +131,7 @@ class _SearchDemoSearchDelegate extends SearchDelegate<Equipment> {
       onSelected: (String suggestion) {
         query = suggestion;
         showResults(context);
+        
       },
     );
   }
@@ -349,8 +350,8 @@ class CustomSettingsDrawer extends StatelessWidget {
   }
 }
 
-class SearchDrawer extends StatelessWidget {
-  const SearchDrawer();
+class FilterDrawer extends StatelessWidget {
+  const FilterDrawer();
 
   @override
   Widget build(BuildContext context) {
@@ -525,5 +526,5 @@ class SearchDrawer extends StatelessWidget {
         ));
   }
 
-  void TypeFilter(SearchDrawer searchDrawer) {}
+  void TypeFilter(FilterDrawer searchDrawer) {}
 }
