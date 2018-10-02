@@ -12,11 +12,17 @@ class AssetDetailsPage extends StatefulWidget {
 class _AssetDetailsPageState extends State<AssetDetailsPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: Icon(Icons.verified_user),
+    return Scaffold( floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          showModalBottomSheet<Null>(
+            context: context,
+            builder: (BuildContext context) => const VerificationDrawer(),
+          );
+        },
+        icon: Icon(Icons.verified_user),
         backgroundColor: Colors.blueAccent,
+           label: Text("Verify"), 
       ),
       body: NestedScrollView(
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
@@ -299,6 +305,79 @@ class _AssetDetailsPageState extends State<AssetDetailsPage> {
                     )),
               ),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class VerificationDrawer extends StatelessWidget {
+  const VerificationDrawer();
+
+  @override
+  Widget build(BuildContext context) {
+    return new Container(
+      height: 150.0,
+      child: Drawer(
+        child: new Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            GridTile(
+                child: InkWell(
+              child: Column(
+                children: <Widget>[
+                  Icon(
+                    Icons.camera_alt,
+                    color: Colors.blueAccent,
+                    size: 50.0,
+                  ),
+                  Divider(
+                    height: 5.0,
+                  ),
+                  Text("Take Photo" , style: TextStyle( fontWeight:FontWeight.bold),)
+                ],
+                mainAxisAlignment: MainAxisAlignment.center,
+              ),
+              splashColor: Colors.pink,
+            )),
+            GridTile(
+                child: InkWell(
+              child: Column(
+                children: <Widget>[
+                  Icon(
+                    Icons.image,
+                    color: Colors.blueAccent,
+                    size: 50.0,
+                  ),
+                  Divider(
+                    height: 5.0,
+                  ),
+                  Text("Select Photo" , style: TextStyle( fontWeight:FontWeight.bold),)
+                ],
+                mainAxisAlignment: MainAxisAlignment.center,
+              ),
+              splashColor: Colors.pink,
+            )),
+             GridTile(
+                child: InkWell(
+              child: Column(
+                children: <Widget>[
+                  Icon(
+                    Icons.no_sim,
+                    color: Colors.blueAccent,
+                    size: 50.0,
+                  ),
+                  Divider(
+                    height: 5.0,
+                  ),
+                  Text("No Photo" , style: TextStyle( fontWeight:FontWeight.bold),)
+                ],
+                mainAxisAlignment: MainAxisAlignment.center,
+              ),
+              splashColor: Colors.pink,
+            )),
           ],
         ),
       ),
