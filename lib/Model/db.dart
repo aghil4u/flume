@@ -15,17 +15,22 @@ class db {
 
   static String EncodeEquipments() {
     final parsed = json.encode(Equipments);
+    print("---------------data decoded-----------");
     return parsed;
   }
 
   static Future<bool> GetEquipmentsFromServer() async {
+    print("---------------geting data from server-----------");
     http.Client client = new http.Client();
     final response = await client.get("http://xo.rs/api/Equipments",
         headers: {"Accept": "application/json"});
     // print(response.body.length);
+    print("---------------data downloaded-----------");
     Equipments = DecodeEquipments(response.body);
     return true;
   }
+
+
 
   static Future<bool> GetEquipmentsFromStorage() async {
     try {
@@ -43,6 +48,7 @@ class db {
           return false;
         }
       } else {
+        print("---------------no data in storage-----------");
         return false;
       }
     } catch (e) {}

@@ -13,6 +13,11 @@ class _AssetDetailsPageState extends State<AssetDetailsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        child: Icon(Icons.verified_user),
+        backgroundColor: Colors.blueAccent,
+      ),
       body: NestedScrollView(
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return <Widget>[
@@ -22,8 +27,7 @@ class _AssetDetailsPageState extends State<AssetDetailsPage> {
               pinned: true,
               flexibleSpace: FlexibleSpaceBar(
                 title: Text(
-                   widget.equipment.EquipmentNumber,
-                  
+                  widget.equipment.EquipmentNumber,
                 ),
               ),
             ),
@@ -118,7 +122,7 @@ class _AssetDetailsPageState extends State<AssetDetailsPage> {
                         ),
                         Column(
                           children: <Widget>[
-//------------------------------------------------------------------- 
+//-------------------------------------------------------------------
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
@@ -194,12 +198,7 @@ class _AssetDetailsPageState extends State<AssetDetailsPage> {
                     )),
               ),
             ),
-
-
-
-
-
-             Divider(
+            Divider(
               height: 20.0,
               color: Colors.transparent,
             ),
@@ -229,7 +228,7 @@ class _AssetDetailsPageState extends State<AssetDetailsPage> {
                         ),
                         Column(
                           children: <Widget>[
-//------------------------------------------------------------------- 
+//-------------------------------------------------------------------
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
@@ -252,9 +251,7 @@ class _AssetDetailsPageState extends State<AssetDetailsPage> {
                                 Text("EQUIPMENT TYPE",
                                     style: TextStyle(
                                         fontSize: 15.0, color: Colors.grey)),
-                                Text(
-                                    widget.equipment.SubType
-                                            ,
+                                Text(widget.equipment.SubType,
                                     style: TextStyle(
                                         fontSize: 15.0, color: Colors.black)),
                               ],
@@ -270,8 +267,7 @@ class _AssetDetailsPageState extends State<AssetDetailsPage> {
                                 Text("MODEL NUMBER",
                                     style: TextStyle(
                                         fontSize: 15.0, color: Colors.grey)),
-                                Text(
-                                    widget.equipment.ModelNumber,
+                                Text(widget.equipment.ModelNumber,
                                     style: TextStyle(
                                         fontSize: 15.0, color: Colors.black)),
                               ],
@@ -302,11 +298,7 @@ class _AssetDetailsPageState extends State<AssetDetailsPage> {
                       ],
                     )),
               ),
-            )
-
-
-
-
+            ),
           ],
         ),
       ),

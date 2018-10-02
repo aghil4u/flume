@@ -13,9 +13,9 @@ class AssetsPage extends StatefulWidget {
 
 class _AssetsPageState extends State<AssetsPage> {
   final _SearchDemoSearchDelegate _delegate = new _SearchDemoSearchDelegate();
-  Equipment _LastEquipmentSelected;
+  Equipment selectedEquipment;
 
-  Future<List<Equipment>> refreshList() async {
+  static Future<List<Equipment>> getList() async {
     if (Equipments == null) {
       await Future.delayed(Duration(seconds: 1));
 
@@ -27,6 +27,12 @@ class _AssetsPageState extends State<AssetsPage> {
     }
 
     return Equipments;
+  }
+
+  static void refreshList(BuildContext context) {
+    db.DeleteRecords();
+    //Navigator.pop(context);
+    Equipments = null;
   }
 
   @override
@@ -43,9 +49,9 @@ class _AssetsPageState extends State<AssetsPage> {
                 context: context,
                 delegate: _delegate,
               );
-              if (selected != null && selected != _LastEquipmentSelected) {
+              if (selected != null && selected != selectedEquipment) {
                 setState(() {
-                  _LastEquipmentSelected = selected;
+                  selectedEquipment = selected;
                 });
               }
             },
@@ -53,7 +59,7 @@ class _AssetsPageState extends State<AssetsPage> {
         ],
       ),
       body: FutureBuilder<List<Equipment>>(
-        future: refreshList(),
+        future: getList(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             var equipment = snapshot.data;
@@ -89,8 +95,8 @@ class _AssetsPageState extends State<AssetsPage> {
             builder: (BuildContext context) => const FilterDrawer(),
           );
         },
-        child: Icon(Icons.adjust),
-        backgroundColor: Colors.deepPurple,
+        child: Icon(Icons.sort),
+        backgroundColor: Colors.blueAccent,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       bottomNavigationBar: new CustomBottomAppBar(
@@ -131,7 +137,6 @@ class _SearchDemoSearchDelegate extends SearchDelegate<Equipment> {
       onSelected: (String suggestion) {
         query = suggestion;
         showResults(context);
-        
       },
     );
   }
@@ -207,11 +212,13 @@ class _SearchDemoSearchDelegate extends SearchDelegate<Equipment> {
           (i != null &&
               i.AssetDescription != null &&
               i.AssetDescription.toLowerCase().contains(sq.toLowerCase())) ||
-          (i!=null && i.OperationId!=null && i.OperationId.toLowerCase().contains(sq.toLowerCase())));
-    
-    if (ss != null) {
-      return ss.toList();
-    }
+          (i != null &&
+              i.OperationId != null &&
+              i.OperationId.toLowerCase().contains(sq.toLowerCase())));
+
+      if (ss != null) {
+        return ss.toList();
+      }
     }
     return null;
   }
@@ -292,23 +299,13 @@ class CustomBottomAppBar extends StatelessWidget {
 
     rowContents.addAll(<Widget>[
       new IconButton(
-        icon: const Icon(Icons.search),
+        icon: const Icon(Icons.refresh),
         onPressed: () {
           Scaffold.of(context).showSnackBar(
-            const SnackBar(content: Text('This is a dummy search action.')),
+            const SnackBar(content: Text('Updating database....')),
           );
-        },
-      ),
-      new IconButton(
-        icon: new Icon(
-          Theme.of(context).platform == TargetPlatform.iOS
-              ? Icons.more_horiz
-              : Icons.more_vert,
-        ),
-        onPressed: () {
-          Scaffold.of(context).showSnackBar(
-            const SnackBar(content: Text('This is a dummy menu action.')),
-          );
+          Equipments.clear();
+          _AssetsPageState.refreshList(context);
         },
       ),
     ]);
