@@ -1,5 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'Model/Equipment.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart';
+import 'package:async/async.dart';
+import 'dart:io';
+import 'package:http/http.dart' as http;
 
 class AssetDetailsPage extends StatefulWidget {
   var equipment;
@@ -10,9 +16,12 @@ class AssetDetailsPage extends StatefulWidget {
 }
 
 class _AssetDetailsPageState extends State<AssetDetailsPage> {
+  File _image;
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold( floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+    return Scaffold(
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           showModalBottomSheet<Null>(
@@ -22,7 +31,7 @@ class _AssetDetailsPageState extends State<AssetDetailsPage> {
         },
         icon: Icon(Icons.verified_user),
         backgroundColor: Colors.blueAccent,
-           label: Text("Verify"), 
+        label: Text("Verify"),
       ),
       body: NestedScrollView(
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
@@ -312,6 +321,7 @@ class _AssetDetailsPageState extends State<AssetDetailsPage> {
   }
 }
 
+//-----------------------------------------------------------------------------------------------------
 class VerificationDrawer extends StatelessWidget {
   const VerificationDrawer();
 
@@ -326,6 +336,12 @@ class VerificationDrawer extends StatelessWidget {
           children: <Widget>[
             GridTile(
                 child: InkWell(
+              onTap: () async {
+                var image =
+                    await ImagePicker.pickImage(source: ImageSource.camera, maxHeight: 2000.0, maxWidth: 2000.0);
+                     print("---------------trying to upload-------------- ");
+                    Upload(image);
+              },
               child: Column(
                 children: <Widget>[
                   Icon(
@@ -336,14 +352,22 @@ class VerificationDrawer extends StatelessWidget {
                   Divider(
                     height: 5.0,
                   ),
-                  Text("Take Photo" , style: TextStyle( fontWeight:FontWeight.bold),)
+                  Text(
+                    "Take Photo",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  )
                 ],
                 mainAxisAlignment: MainAxisAlignment.center,
               ),
-              splashColor: Colors.pink,
             )),
             GridTile(
                 child: InkWell(
+              onTap: () async {
+                File image =
+                    await ImagePicker.pickImage(source: ImageSource.gallery);
+                      print("---------------trying to upload-------------- ");
+                    Upload(image);
+              },
               child: Column(
                 children: <Widget>[
                   Icon(
@@ -354,13 +378,16 @@ class VerificationDrawer extends StatelessWidget {
                   Divider(
                     height: 5.0,
                   ),
-                  Text("Select Photo" , style: TextStyle( fontWeight:FontWeight.bold),)
+                  Text(
+                    "Select Photo",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  )
                 ],
                 mainAxisAlignment: MainAxisAlignment.center,
               ),
               splashColor: Colors.pink,
             )),
-             GridTile(
+            GridTile(
                 child: InkWell(
               child: Column(
                 children: <Widget>[
@@ -372,7 +399,10 @@ class VerificationDrawer extends StatelessWidget {
                   Divider(
                     height: 5.0,
                   ),
-                  Text("No Photo" , style: TextStyle( fontWeight:FontWeight.bold),)
+                  Text(
+                    "No Photo",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  )
                 ],
                 mainAxisAlignment: MainAxisAlignment.center,
               ),
@@ -382,5 +412,26 @@ class VerificationDrawer extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Upload(File imageFile) async {
+  
+    var stream =
+        new http.ByteStream(DelegatingStream.typed(imageFile.openRead()));
+    var length = await imageFile.length();
+
+    var uri = Uri.parse("http://xo.rs/api/image/");
+
+    var request = new http.MultipartRequest("POST", uri);
+    var multipartFile = new http.MultipartFile('file', stream, length,
+        filename: basename(imageFile.path));
+    //contentType: new MediaType('image', 'png'));
+
+    request.files.add(multipartFile);
+    var response = await request.send();
+    print(response.statusCode);
+    response.stream.transform(utf8.decoder).listen((value) {
+      print(value);
+    });
   }
 }
