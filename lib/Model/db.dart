@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'package:async/async.dart';
 import 'package:flume/Model/Verification.dart';
+import 'package:path/path.dart';
 
 import 'Equipment.dart';
 import 'dart:convert';
@@ -136,5 +138,25 @@ class db {
     } catch (e) {}
 
     return true;
+  }
+
+   static UploadImage(File imageFile) async {
+    var stream =
+        new http.ByteStream(DelegatingStream.typed(imageFile.openRead()));
+    var length = await imageFile.length();
+
+    var uri = Uri.parse("http://xo.rs/api/image/");
+
+    var request = new http.MultipartRequest("POST", uri);
+    var multipartFile = new http.MultipartFile('file', stream, length,
+        filename: basename(imageFile.path));
+    //contentType: new MediaType('image', 'png'));
+
+    request.files.add(multipartFile);
+    var response = await request.send();
+    print(response.reasonPhrase);
+    response.stream.transform(utf8.decoder).listen((value) {
+      print(value);
+    });
   }
 }
