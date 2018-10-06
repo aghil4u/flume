@@ -62,14 +62,15 @@ class _VerificationsPageState extends State<VerificationsPage> {
         future: getList(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            var equipment = snapshot.data;
+            var v = snapshot.data;
             return new ListView.builder(
               physics: const AlwaysScrollableScrollPhysics(),
-              itemCount: equipment == null ? 0 : equipment.length,
+              itemCount: v == null ? 0 : v.length,
               itemBuilder: (BuildContext context, int index) {
                 return new ListTile(
-                  title: new Text(equipment[index].AssetNumber),
-                  subtitle: Text(equipment[index].Date),
+                  title: new Text(v[index].AssetNumber),
+                  subtitle: Text("on " +v[index].Date),
+                   isThreeLine: true, 
                   leading: CircleAvatar(
                     child: Text(index.toString()),
                   ),
@@ -90,18 +91,18 @@ class _VerificationsPageState extends State<VerificationsPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Verification v = new Verification(
-              AssetNumber: DateTime.now().toString(),
-              Date: DateTime.now().toString(),
-              ImageUrl: "fddfg",
-              Location: "sdfsdf",
-              Type: "sdfsdf",
-              User: "sdfsdf");
-          db.PostVerification(v).whenComplete(() {
-            _scaffoldKey.currentState.showSnackBar(SnackBar(
-              content: Text('Yay! Verification Posted!'),
-            ));
-          });
+          // Verification v = new Verification(
+          //     AssetNumber: DateTime.now().toString(),
+          //     Date: DateTime.now().toString(),
+          //     ImageUrl: "fddfg",
+          //     Location: "sdfsdf",
+          //     Type: "sdfsdf",
+          //     User: "sdfsdf");
+          // db.PostVerification(v).whenComplete(() {
+          //   _scaffoldKey.currentState.showSnackBar(SnackBar(
+          //     content: Text('Yay! Verification Posted!'),
+          //   ));
+          // });
         },
         child: Icon(Icons.sort),
         backgroundColor: Colors.blueAccent,
