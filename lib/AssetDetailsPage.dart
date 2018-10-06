@@ -1,14 +1,18 @@
 import 'dart:convert';
-
+import 'package:flume/Model/Verification.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
 import 'package:async/async.dart';
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'Model/Equipment.dart';
+import 'Model/db.dart';
+
+GlobalKey<ScaffoldState> _AssetDetailsScaffoldKey = new GlobalKey();
 
 class AssetDetailsPage extends StatefulWidget {
-  var equipment;
+  Equipment equipment;
   AssetDetailsPage({this.equipment});
 
   @override
@@ -21,12 +25,14 @@ class _AssetDetailsPageState extends State<AssetDetailsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _AssetDetailsScaffoldKey,
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
+          print(widget.equipment.EquipmentDescription);
           showModalBottomSheet<Null>(
             context: context,
-            builder: (BuildContext context) => const VerificationDrawer(),
+            builder: (BuildContext context) => VerificationDrawer(),
           );
         },
         icon: Icon(Icons.verified_user),
@@ -323,7 +329,7 @@ class _AssetDetailsPageState extends State<AssetDetailsPage> {
 
 //-----------------------------------------------------------------------------------------------------
 class VerificationDrawer extends StatelessWidget {
-  const VerificationDrawer();
+  VerificationDrawer();
 
   @override
   Widget build(BuildContext context) {
@@ -337,10 +343,24 @@ class VerificationDrawer extends StatelessWidget {
             GridTile(
                 child: InkWell(
               onTap: () async {
-                var image =
-                    await ImagePicker.pickImage(source: ImageSource.camera, maxHeight: 2000.0, maxWidth: 2000.0);
-                     print("---------------trying to upload-------------- ");
-                    Upload(image);
+                File image = await ImagePicker.pickImage(
+                    source: ImageSource.camera,
+                );
+                print("---------------trying to upload-------------- ");
+                Upload(image);
+
+                Verification v = new Verification(
+                    AssetNumber: DateTime.now().toString(),
+                    Date: DateTime.now().toString(),
+                    ImageUrl: "fddfg",
+                    Location: "sdfsdf",
+                    Type: "sdfsdf",
+                    User: "sdfsdf");
+                db.PostVerification(v).whenComplete(() {
+                  _AssetDetailsScaffoldKey.currentState.showSnackBar(SnackBar(
+                    content: Text('Yay! Verification Posted!'),
+                  ));
+                });
               },
               child: Column(
                 children: <Widget>[
@@ -365,8 +385,8 @@ class VerificationDrawer extends StatelessWidget {
               onTap: () async {
                 File image =
                     await ImagePicker.pickImage(source: ImageSource.gallery);
-                      print("---------------trying to upload-------------- ");
-                    Upload(image);
+                print("---------------trying to upload-------------- ");
+                Upload(image);
               },
               child: Column(
                 children: <Widget>[
@@ -415,7 +435,6 @@ class VerificationDrawer extends StatelessWidget {
   }
 
   Upload(File imageFile) async {
-  
     var stream =
         new http.ByteStream(DelegatingStream.typed(imageFile.openRead()));
     var length = await imageFile.length();
@@ -429,7 +448,7 @@ class VerificationDrawer extends StatelessWidget {
 
     request.files.add(multipartFile);
     var response = await request.send();
-    print(response.statusCode);
+    print(response.reasonPhrase);
     response.stream.transform(utf8.decoder).listen((value) {
       print(value);
     });

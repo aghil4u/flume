@@ -1,3 +1,4 @@
+import 'package:flume/VerificationsPage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'AssetsPage.dart';
@@ -91,6 +92,10 @@ class HomePage extends StatelessWidget {
                 ),
               ),
               GestureDetector(
+                 onTap:() {
+                  Navigator.of(context).push(new MaterialPageRoute(
+                      builder: (BuildContext) => new VerificationsPage()));
+                },
                 child: Container(
                   padding: EdgeInsets.all(10.0),
                   child: Card(
@@ -100,12 +105,12 @@ class HomePage extends StatelessWidget {
                       children: <Widget>[
                         Center(
                           child: Icon(
-                            Icons.search,
+                            Icons.check_circle,
                             size: 50.0,
                           ),
                         ),
                         Row(
-                          children: <Widget>[Text("Search")],
+                          children: <Widget>[Text("Verifications")],
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.end,
                         )

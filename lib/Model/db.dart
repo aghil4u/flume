@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'package:flume/Model/Verification.dart';
+
 import 'Equipment.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -7,15 +9,29 @@ import 'package:path_provider/path_provider.dart';
 
 class db {
   static List<Equipment> Equipments;
+  static List<Verification> Verifications;
 
   static List<Equipment> DecodeEquipments(String responseBody) {
     final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
     return parsed.map<Equipment>((json) => Equipment.fromJson(json)).toList();
   }
 
+  static List<Verification> DecodeVerifications(String responseBody) {
+    final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
+    return parsed
+        .map<Verification>((json) => Verification.fromJson(json))
+        .toList();
+  }
+
   static String EncodeEquipments() {
     final parsed = json.encode(Equipments);
     print("---------------data decoded-----------");
+    return parsed;
+  }
+
+  static String EncodeVerification(Verification verification) {
+    final parsed = json.encode(verification);
+    print("---------------data encoded-----------");
     return parsed;
   }
 
@@ -30,7 +46,16 @@ class db {
     return true;
   }
 
-
+  static Future<bool> GetVerificationsFromServer() async {
+    print("---------------geting data from server-----------");
+    http.Client client = new http.Client();
+    final response = await client.get("http://xo.rs/api/Verifications",
+        headers: {"Accept": "application/json"});
+    // print(response.body.length);
+    print("---------------data downloaded-----------");
+    Verifications = DecodeVerifications(response.body);
+    return true;
+  }
 
   static Future<bool> GetEquipmentsFromStorage() async {
     try {
@@ -61,6 +86,25 @@ class db {
       final file = await _localFile;
       file.writeAsString(EncodeEquipments().toString());
       print("---------------Local Database Updated-----------");
+    } catch (e) {
+      print(e.toString());
+    }
+
+    return true;
+  }
+
+  static Future<bool> PostVerification(Verification v) async {
+    try {
+      HttpClient httpClient = new HttpClient();
+      HttpClientRequest request = await httpClient.postUrl(Uri.parse("http://xo.rs/api/Verifications"));
+      request.headers.set('content-type', 'application/json');
+      request.add(utf8.encode(json.encode(v)));
+      HttpClientResponse response = await request.close();
+      // todo - you should check the response.statusCode
+      String reply = await response.transform(utf8.decoder).join();
+      httpClient.close();
+      print(reply);
+      print("---------------Verification Uploaded-----------");
     } catch (e) {
       print(e.toString());
     }
