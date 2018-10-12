@@ -1,10 +1,11 @@
+import 'package:flume/VerificationDetailsPage.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'AssetDetailsPage.dart';
 import 'Model/Verification.dart';
 import 'Model/db.dart';
 
-var refreshKey = GlobalKey<RefreshIndicatorState>();
+//var refreshKey = GlobalKey<RefreshIndicatorState>();
 GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey();
 List<Verification> Verifications;
 
@@ -64,21 +65,19 @@ class _VerificationsPageState extends State<VerificationsPage> {
           if (snapshot.hasData) {
             var v = snapshot.data;
             return new ListView.builder(
-              physics: const AlwaysScrollableScrollPhysics(),
               itemCount: v == null ? 0 : v.length,
               itemBuilder: (BuildContext context, int index) {
                 return new ListTile(
                   title: new Text(v[index].AssetNumber),
-                  subtitle: Text("on " +v[index].Date),
-                   isThreeLine: true, 
+                  //subtitle: Text(v[index].Date.substring(0,10)),
                   leading: CircleAvatar(
                     child: Text(index.toString()),
                   ),
-                  // onTap: () {
-                  //   Navigator.of(context).push(new MaterialPageRoute(
-                  //       builder: (BuildContext) =>
-                  //           new AssetDetailsPage(equipment: equipment[index])));
-                  // },
+                  onTap: () {
+                    Navigator.of(context).push(new MaterialPageRoute(
+                        builder: (BuildContext) =>
+                            new VerificationDetailsPage(verification:v[index])));
+                  },
                 );
               },
             );

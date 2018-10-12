@@ -5,7 +5,7 @@ import 'Model/Equipment.dart';
 import 'Model/db.dart';
 
 var refreshKey = GlobalKey<RefreshIndicatorState>();
-List<Equipment> Equipments;
+List<Equipment> equipments;
 
 class AssetsPage extends StatefulWidget {
   _AssetsPageState createState() => _AssetsPageState();
@@ -16,23 +16,23 @@ class _AssetsPageState extends State<AssetsPage> {
   Equipment selectedEquipment;
 
   static Future<List<Equipment>> getList() async {
-    if (Equipments == null) {
+    if (equipments == null) {
       await Future.delayed(Duration(seconds: 1));
 
       if (await db.GetEquipmentsFromStorage() == false) {
         await db.GetEquipmentsFromServer();
         await db.SaveEquipmentToStorage();
       }
-      Equipments = db.Equipments;
+      equipments = db.Equipments;
     }
 
-    return Equipments;
+    return equipments;
   }
 
   static void refreshList(BuildContext context) {
     db.DeleteRecords();
     //Navigator.pop(context);
-    Equipments = null;
+    equipments = null;
   }
 
   @override
@@ -208,7 +208,7 @@ class _SearchDemoSearchDelegate extends SearchDelegate<Equipment> {
 
   List<Equipment> SearchEquipments(String sq) {
     if (sq != null) {
-      var ss = Equipments.where((Equipment i) =>
+      var ss = equipments.where((Equipment i) =>
           (i != null &&
               i.AssetDescription != null &&
               i.AssetDescription.toLowerCase().contains(sq.toLowerCase())) ||
@@ -304,7 +304,7 @@ class CustomBottomAppBar extends StatelessWidget {
           Scaffold.of(context).showSnackBar(
             const SnackBar(content: Text('Updating database....')),
           );
-          Equipments.clear();
+          equipments.clear();
           _AssetsPageState.refreshList(context);
         },
       ),

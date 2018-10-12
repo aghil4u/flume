@@ -59,6 +59,18 @@ class db {
     return true;
   }
 
+  static Future<bool> DeleteVerficationFromServer(int id) async {
+    print("---------------trying to delete verification-----------");
+    http.Client client = new http.Client();
+    final response = await client.delete(
+      "http://xo.rs/api/Verifications/" + id.toString(),
+    );
+    print(response.reasonPhrase);
+    print("---------------data deleted-----------");
+
+    return true;
+  }
+
   static Future<bool> GetEquipmentsFromStorage() async {
     try {
       print("---------------reding from storage-----------");
@@ -98,7 +110,8 @@ class db {
   static Future<bool> PostVerification(Verification v) async {
     try {
       HttpClient httpClient = new HttpClient();
-      HttpClientRequest request = await httpClient.postUrl(Uri.parse("http://xo.rs/api/Verifications"));
+      HttpClientRequest request =
+          await httpClient.postUrl(Uri.parse("http://xo.rs/api/Verifications"));
       request.headers.set('content-type', 'application/json');
       request.add(utf8.encode(json.encode(v)));
       HttpClientResponse response = await request.close();
@@ -140,7 +153,7 @@ class db {
     return true;
   }
 
-   static UploadImage(File imageFile) async {
+  static Future<String> UploadImage(File imageFile) async {
     var stream =
         new http.ByteStream(DelegatingStream.typed(imageFile.openRead()));
     var length = await imageFile.length();
@@ -155,8 +168,8 @@ class db {
     request.files.add(multipartFile);
     var response = await request.send();
     print(response.reasonPhrase);
-    response.stream.transform(utf8.decoder).listen((value) {
-      print(value);
-    });
+    var data = await response.stream.transform(utf8.decoder).first;
+    return (json.decode(data.toString())["filePath"].toString());
+    // return json.decode(data.toString())["fileName"].toString();
   }
 }
