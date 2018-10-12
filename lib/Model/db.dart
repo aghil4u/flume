@@ -169,7 +169,11 @@ class db {
     var response = await request.send();
     print(response.reasonPhrase);
     var data = await response.stream.transform(utf8.decoder).first;
-    return (json.decode(data.toString())["filePath"].toString());
-    // return json.decode(data.toString())["fileName"].toString();
+    String msg = "http://xo.rs/" +
+        json
+            .decode(data.toString())["filePath"]
+            .toString()
+            .split('\\wwwroot\\')[2];
+    return (msg);
   }
 }

@@ -125,7 +125,7 @@ class _AssetDetailsPageState extends State<VerificationDetailsPage> {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: <Widget>[
                             new Text(
-                              widget.verification.ImageUrl,
+                              "IMAGE",
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
@@ -136,84 +136,16 @@ class _AssetDetailsPageState extends State<VerificationDetailsPage> {
                         Divider(
                           height: 30.0,
                         ),
-                        Column(
-                          children: <Widget>[
-//-------------------------------------------------------------------
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Text("ACQUISITION DATE",
-                                    style: TextStyle(
-                                        fontSize: 15.0, color: Colors.grey)),
-                                Text(widget.verification.ImageUrl,
-                                    style: TextStyle(
-                                        fontSize: 15.0, color: Colors.black)),
-                              ],
-                            ),
-                            Divider(
-                              height: 10.0,
-                              color: Colors.transparent,
-                            ),
-//-------------------------------------------------------------------
-                            // Row(
-                            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            //   children: <Widget>[
-                            //     Text("ACQUISITION VALUE",
-                            //         style: TextStyle(
-                            //             fontSize: 15.0, color: Colors.grey)),
-                            //     Text(
-                            //         widget.verification.AcquisitionValue
-                            //                 .toString() +
-                            //             " AED",
-                            //         style: TextStyle(
-                            //             fontSize: 15.0, color: Colors.black)),
-                            //   ],
-                            // ),
-                            // Divider(
-                            //   height: 10.0,
-                            //   color: Colors.transparent,
-                            // ),
-//-------------------------------------------------------------------
-                            // Row(
-                            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            //   children: <Widget>[
-                            //     Text("BOOK VALUE",
-                            //         style: TextStyle(
-                            //             fontSize: 15.0, color: Colors.grey)),
-                            //     Text(
-                            //         widget.verification.BookValue.toString() +
-                            //             " AED",
-                            //         style: TextStyle(
-                            //             fontSize: 15.0, color: Colors.black)),
-                            //   ],
-                            // ),
-                            // Divider(
-                            //   height: 10.0,
-                            //   color: Colors.transparent,
-                            // ),
-//-------------------------------------------------------------------
-                            // Row(
-                            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            //   children: <Widget>[
-                            //     Text("ASSET LOCATION",
-                            //         style: TextStyle(
-                            //             fontSize: 15.0, color: Colors.grey)),
-                            //     Text(widget.verification.AssetLocation,
-                            //         style: TextStyle(
-                            //             fontSize: 15.0, color: Colors.black)),
-                            //   ],
-                            // ),
-                            // Divider(
-                            //   height: 10.0,
-                            //   color: Colors.transparent,
-                            // ),
-//-------------------------------------------------------------------
-                          ],
+                        Image.network(
+                          widget.verification.ImageUrl,
+                          scale: 1.0,
+                          repeat: ImageRepeat.noRepeat,
                         ),
                       ],
                     )),
               ),
             ),
+
             Divider(
               height: 20.0,
               color: Colors.transparent,
