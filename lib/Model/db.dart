@@ -1,13 +1,19 @@
 import 'dart:async';
 import 'package:async/async.dart';
 import 'package:flume/Model/Verification.dart';
+import 'package:flutter/foundation.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
-
+import 'dart:math';
 import 'Equipment.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
+
+import 'package:image/image.dart' as Im;
+import 'package:path_provider/path_provider.dart';
+import 'dart:math' as Math;
 
 class db {
   static List<Equipment> Equipments;
@@ -176,4 +182,35 @@ class db {
             .split('\\wwwroot\\')[2];
     return (msg);
   }
+
+  static Future<String> compressAndUpload(File imageFile) async {
+    final tempDir = await getTemporaryDirectory();
+    int rand = new Math.Random().nextInt(10000);
+    CompressObject compressObject =
+        new CompressObject(imageFile, tempDir.path, rand);
+    String filePath = await _compressImage(compressObject);
+    File file = new File(filePath);
+    return UploadImage(file);
+  }
+
+  static String decodeImage(CompressObject object) {
+    Im.Image image = Im.decodeImage(object.imageFile.readAsBytesSync());
+    Im.Image smallerImage = Im.copyResize(
+        image, 1024); // choose the size here, it will maintain aspect ratio
+    var decodedImageFile = new File(object.path + '/img_${object.rand}.jpg');
+    decodedImageFile.writeAsBytesSync(Im.encodeJpg(smallerImage, quality: 85));
+    return decodedImageFile.path;
+  }
+
+  static Future<String> _compressImage(CompressObject object) async {
+    return compute(decodeImage, object);
+  }
+}
+
+class CompressObject {
+  File imageFile;
+  String path;
+  int rand;
+
+  CompressObject(this.imageFile, this.path, this.rand);
 }

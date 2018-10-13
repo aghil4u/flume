@@ -351,7 +351,7 @@ class VerificationDrawer extends StatelessWidget {
                 if (image.path != null) {
                   Navigator.of(context).pop();
                   print("---------------trying to upload-------------- ");
-                  var value = await db.UploadImage(image);
+                  var value = await db.compressAndUpload(image);
 
                   if (value != null) {
                     print(value);
@@ -398,23 +398,24 @@ class VerificationDrawer extends StatelessWidget {
                 if (image.path != null) {
                   Navigator.of(context).pop();
                   print("---------------trying to upload-------------- ");
-                  db.UploadImage(image).then((value) {
-                    if (value != null) {
-                      Verification v = new Verification(
-                          AssetNumber: e.AssetNumber,
-                          Date: DateTime.now().toString(),
-                          ImageUrl: value,
-                          Location: "",
-                          Type: "PhotoVerification",
-                          User: "DefaultUser");
-                      db.PostVerification(v).whenComplete(() {
-                        _assetDetailsScaffoldKey.currentState
-                            .showSnackBar(SnackBar(
-                          content: Text('Yay! Verification Posted'),
-                        ));
-                      });
-                    }
-                  });
+                  var value = await db.compressAndUpload(image);
+
+                  if (value != null) {
+                    print(value);
+                    Verification v = new Verification(
+                        AssetNumber: e.AssetNumber,
+                        Date: DateTime.now().toString(),
+                        ImageUrl: value,
+                        Location: "",
+                        Type: "PhotoVerification",
+                        User: "DefaultUser");
+                    db.PostVerification(v).whenComplete(() {
+                      _assetDetailsScaffoldKey.currentState
+                          .showSnackBar(SnackBar(
+                        content: Text('Yay! Verification Posted'),
+                      ));
+                    });
+                  }
                 }
               },
               child: Column(
