@@ -357,6 +357,8 @@ class VerificationDrawer extends StatelessWidget {
                     print(value);
                     Verification v = new Verification(
                         AssetNumber: e.AssetNumber,
+                        EquipmentNumber: e.EquipmentNumber,
+                        AssetDescription: e.AssetDescription,
                         Date: DateTime.now().toString(),
                         ImageUrl: value,
                         Location: "",
@@ -404,6 +406,8 @@ class VerificationDrawer extends StatelessWidget {
                     print(value);
                     Verification v = new Verification(
                         AssetNumber: e.AssetNumber,
+                        EquipmentNumber: e.EquipmentNumber,
+                        AssetDescription: e.AssetDescription,
                         Date: DateTime.now().toString(),
                         ImageUrl: value,
                         Location: "",
@@ -442,6 +446,8 @@ class VerificationDrawer extends StatelessWidget {
               onTap: () async {
                 Verification v = new Verification(
                     AssetNumber: e.AssetNumber,
+                    EquipmentNumber: e.EquipmentNumber,
+                    AssetDescription: e.AssetDescription,
                     Date: DateTime.now().toString(),
                     ImageUrl: "---",
                     Location: "",

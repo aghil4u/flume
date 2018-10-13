@@ -7,6 +7,8 @@ class Verification {
   final String Location;
   final String User;
   final String AssetNumber;
+  final String EquipmentNumber;
+  final String AssetDescription;
 
   Verification({
     this.id,
@@ -16,6 +18,8 @@ class Verification {
     this.Location,
     this.User,
     this.AssetNumber,
+    this.EquipmentNumber,
+    this.AssetDescription,
   });
 
   factory Verification.fromJson(Map<String, dynamic> json) {
@@ -27,6 +31,8 @@ class Verification {
       Location: json['location'],
       User: json['user'],
       AssetNumber: json['assetNumber'],
+      EquipmentNumber: json['equipmentNumber'],
+      AssetDescription: json['assetDescription'],
     );
   }
 
@@ -38,5 +44,7 @@ class Verification {
         'location': Location,
         'user': User,
         'assetNumber': AssetNumber,
+        'equipmentNumber': EquipmentNumber,
+        'assetDescription': AssetDescription,
       };
 }

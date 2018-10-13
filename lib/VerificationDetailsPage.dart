@@ -1,8 +1,5 @@
 import 'package:flume/Model/Verification.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'dart:io';
-import 'Model/Equipment.dart';
 import 'Model/db.dart';
 
 GlobalKey<ScaffoldState> _assetDetailsScaffoldKey = new GlobalKey();
@@ -60,7 +57,7 @@ class _AssetDetailsPageState extends State<VerificationDetailsPage> {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: <Widget>[
                             new Text(
-                              widget.verification.Date,
+                              widget.verification.AssetDescription,
                               textAlign: TextAlign.center,
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
@@ -80,7 +77,7 @@ class _AssetDetailsPageState extends State<VerificationDetailsPage> {
                                 Divider(
                                   height: 5.0,
                                 ),
-                                Text(widget.verification.Location,
+                                Text(widget.verification.EquipmentNumber,
                                     style: TextStyle(
                                         fontSize: 20.0,
                                         fontWeight: FontWeight.bold))
@@ -180,53 +177,53 @@ class _AssetDetailsPageState extends State<VerificationDetailsPage> {
                         Column(
                           children: <Widget>[
 //-------------------------------------------------------------------
-                            // Row(
-                            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            //   children: <Widget>[
-                            //     Text("OPERATION ID",
-                            //         style: TextStyle(
-                            //             fontSize: 15.0, color: Colors.grey)),
-                            //     Text(widget.verification.OperationId,
-                            //         style: TextStyle(
-                            //             fontSize: 15.0, color: Colors.black)),
-                            //   ],
-                            // ),
-                            // Divider(
-                            //   height: 10.0,
-                            //   color: Colors.transparent,
-                            // ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Text("LOCATION",
+                                    style: TextStyle(
+                                        fontSize: 15.0, color: Colors.grey)),
+                                Text(widget.verification.Location,
+                                    style: TextStyle(
+                                        fontSize: 15.0, color: Colors.black)),
+                              ],
+                            ),
+                            Divider(
+                              height: 10.0,
+                              color: Colors.transparent,
+                            ),
 //-------------------------------------------------------------------
-                            // Row(
-                            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            //   children: <Widget>[
-                            //     Text("EQUIPMENT TYPE",
-                            //         style: TextStyle(
-                            //             fontSize: 15.0, color: Colors.grey)),
-                            //     Text(widget.verification.SubType,
-                            //         style: TextStyle(
-                            //             fontSize: 15.0, color: Colors.black)),
-                            //   ],
-                            // ),
-                            // Divider(
-                            //   height: 10.0,
-                            //   color: Colors.transparent,
-                            // ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Text("VERIFIED BY",
+                                    style: TextStyle(
+                                        fontSize: 15.0, color: Colors.grey)),
+                                Text(widget.verification.User,
+                                    style: TextStyle(
+                                        fontSize: 15.0, color: Colors.black)),
+                              ],
+                            ),
+                            Divider(
+                              height: 10.0,
+                              color: Colors.transparent,
+                            ),
 //-------------------------------------------------------------------
-                            // Row(
-                            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            //   children: <Widget>[
-                            //     Text("MODEL NUMBER",
-                            //         style: TextStyle(
-                            //             fontSize: 15.0, color: Colors.grey)),
-                            //     Text(widget.verification.ModelNumber,
-                            //         style: TextStyle(
-                            //             fontSize: 15.0, color: Colors.black)),
-                            //   ],
-                            // ),
-                            // Divider(
-                            //   height: 10.0,
-                            //   color: Colors.transparent,
-                            // ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Text("VERIFICATION DATE",
+                                    style: TextStyle(
+                                        fontSize: 15.0, color: Colors.grey)),
+                                Text(widget.verification.Date.substring(0, 10),
+                                    style: TextStyle(
+                                        fontSize: 15.0, color: Colors.black)),
+                              ],
+                            ),
+                            Divider(
+                              height: 10.0,
+                              color: Colors.transparent,
+                            ),
 //-------------------------------------------------------------------
                             // Row(
                             //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -250,6 +247,9 @@ class _AssetDetailsPageState extends State<VerificationDetailsPage> {
                     )),
               ),
             ),
+            SizedBox(
+              height: 200.0,
+            )
           ],
         ),
       ),

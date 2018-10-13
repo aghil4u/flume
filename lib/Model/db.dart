@@ -2,17 +2,13 @@ import 'dart:async';
 import 'package:async/async.dart';
 import 'package:flume/Model/Verification.dart';
 import 'package:flutter/foundation.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
-import 'dart:math';
 import 'Equipment.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
-
 import 'package:image/image.dart' as Im;
-import 'package:path_provider/path_provider.dart';
 import 'dart:math' as Math;
 
 class db {
