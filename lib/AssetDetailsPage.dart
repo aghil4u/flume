@@ -348,7 +348,7 @@ class VerificationDrawer extends StatelessWidget {
                 File image = await ImagePicker.pickImage(
                   source: ImageSource.camera,
                 );
-                if (image.path != null) {
+                if (image != null && image.path != null) {
                   Navigator.of(context).pop();
                   print("---------------trying to upload-------------- ");
                   var value = await db.compressAndUpload(image);
@@ -397,7 +397,7 @@ class VerificationDrawer extends StatelessWidget {
                 File image = await ImagePicker.pickImage(
                   source: ImageSource.gallery,
                 );
-                if (image.path != null) {
+                if (image != null && image.path != null) {
                   Navigator.of(context).pop();
                   print("---------------trying to upload-------------- ");
                   var value = await db.compressAndUpload(image);
