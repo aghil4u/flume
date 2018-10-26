@@ -30,7 +30,7 @@ class _AssetsPageState extends State<AssetsPage> {
   }
 
   static void refreshList(BuildContext context) {
-    db.DeleteRecords();
+    db.DeleteEqdb();
     //Navigator.pop(context);
     equipments = null;
   }
@@ -341,7 +341,7 @@ class CustomSettingsDrawer extends StatelessWidget {
   }
 
   Future<bool> RefreshDatabase() async {
-    await db.DeleteRecords();
+    await db.DeleteEqdb();
     await db.GetEquipmentsFromServer();
     await db.SaveEquipmentToStorage();
   }

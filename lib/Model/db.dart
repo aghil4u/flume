@@ -205,9 +205,24 @@ class db {
     return new File('$path/EmployeeStorage.db');
   }
 
-  static Future<bool> DeleteRecords() async {
+  static Future<bool> DeleteEqdb() async {
     try {
       final file = await EquipmentsFile;
+      bool exists = await file.exists();
+      print("---------------deleting File-----------");
+      if (exists) {
+        file.deleteSync();
+      } else {
+        return false;
+      }
+    } catch (e) {}
+
+    return true;
+  }
+
+  static Future<bool> DeleteEmdb() async {
+    try {
+      final file = await EmployeesFile;
       bool exists = await file.exists();
       print("---------------deleting File-----------");
       if (exists) {

@@ -19,7 +19,7 @@ class _VerificationsPageState extends State<VerificationsPage> {
 
   static Future<List<Verification>> getList() async {
     //  if (Verifications == null) {
-   // await Future.delayed(Duration(seconds: 1));
+    // await Future.delayed(Duration(seconds: 1));
 
     await db.GetVerificationsFromServer();
 
@@ -30,7 +30,7 @@ class _VerificationsPageState extends State<VerificationsPage> {
   }
 
   static void refreshList(BuildContext context) {
-    db.DeleteRecords();
+    //db.DeleteEqdb();
     //Navigator.pop(context);
     Verifications = null;
   }
@@ -75,8 +75,8 @@ class _VerificationsPageState extends State<VerificationsPage> {
                   ),
                   onTap: () {
                     Navigator.of(context).push(new MaterialPageRoute(
-                        builder: (BuildContext) =>
-                            new VerificationDetailsPage(verification:v[index])));
+                        builder: (BuildContext) => new VerificationDetailsPage(
+                            verification: v[index])));
                   },
                 );
               },
@@ -349,7 +349,7 @@ class CustomSettingsDrawer extends StatelessWidget {
   }
 
   Future<bool> RefreshDatabase() async {
-    await db.DeleteRecords();
+    await db.DeleteEqdb();
     await db.GetEquipmentsFromServer();
     await db.SaveEquipmentToStorage();
   }

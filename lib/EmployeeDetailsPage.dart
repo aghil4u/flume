@@ -1,9 +1,6 @@
-import 'package:flume/Model/Verification.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'dart:io';
 import 'Model/Employee.dart';
-import 'Model/db.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 GlobalKey<ScaffoldState> _empScaffoldKey = new GlobalKey();
 
@@ -23,11 +20,7 @@ class _EmployeeDetailsPageState extends State<EmployeeDetailsPage> {
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          // showModalBottomSheet<Null>(
-          //   builder: (BuildContext context) =>
-          //       VerificationDrawer(widget.employee),
-          //   context: context,
-          // );
+          launch("tel://" + widget.employee.ContactNumber);
         },
         icon: Icon(Icons.call),
         backgroundColor: Colors.blueAccent,

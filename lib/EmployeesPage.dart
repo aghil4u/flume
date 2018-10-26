@@ -31,7 +31,7 @@ class _EmployeesPageState extends State<EmployeesPage> {
   }
 
   static void refreshList(BuildContext context) {
-    db.DeleteRecords();
+    db.DeleteEmdb();
     //Navigator.pop(context);
     employees = null;
   }
@@ -349,7 +349,7 @@ class CustomSettingsDrawer extends StatelessWidget {
   }
 
   Future<bool> RefreshDatabase() async {
-    await db.DeleteRecords();
+    await db.DeleteEqdb();
     await db.GetEmployeesFromServer();
     await db.SaveEmployeesToStorage();
   }
