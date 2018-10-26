@@ -3,6 +3,7 @@ import 'package:async/async.dart';
 import 'package:flume/Model/Verification.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
+import 'Employee.dart';
 import 'Equipment.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -14,6 +15,7 @@ import 'dart:math' as Math;
 class db {
   static List<Equipment> Equipments;
   static List<Verification> Verifications;
+  static List<Employee> Employees;
 
   static List<Equipment> DecodeEquipments(String responseBody) {
     final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
@@ -27,8 +29,19 @@ class db {
         .toList();
   }
 
+  static List<Employee> DecodeEmployees(String responseBody) {
+    final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
+    return parsed.map<Employee>((json) => Employee.fromJson(json)).toList();
+  }
+
   static String EncodeEquipments() {
     final parsed = json.encode(Equipments);
+    print("---------------data decoded-----------");
+    return parsed;
+  }
+
+  static String EncodeEmployees() {
+    final parsed = json.encode(Employees);
     print("---------------data decoded-----------");
     return parsed;
   }
@@ -44,7 +57,7 @@ class db {
     http.Client client = new http.Client();
     final response = await client.get("http://xo.rs/api/Equipments",
         headers: {"Accept": "application/json"});
-    // print(response.body.length);
+    print(response.body.length);
     print("---------------data downloaded-----------");
     Equipments = DecodeEquipments(response.body);
     return true;
@@ -58,6 +71,17 @@ class db {
     // print(response.body.length);
     print("---------------data downloaded-----------");
     Verifications = DecodeVerifications(response.body);
+    return true;
+  }
+
+  static Future<bool> GetEmployeesFromServer() async {
+    print("---------------geting data from server-----------");
+    http.Client client = new http.Client();
+    final response = await client.get("http://xo.rs/api/Employees",
+        headers: {"Accept": "application/json"});
+    // print(response.body.length);
+    print("---------------data downloaded-----------");
+    Employees = DecodeEmployees(response.body);
     return true;
   }
 
@@ -76,7 +100,7 @@ class db {
   static Future<bool> GetEquipmentsFromStorage() async {
     try {
       print("---------------reding from storage-----------");
-      final file = await _localFile;
+      final file = await EquipmentsFile;
       bool exists = await file.exists();
       if (exists) {
         try {
@@ -97,10 +121,46 @@ class db {
     return true;
   }
 
+  static Future<bool> GetEmployeesFromStorage() async {
+    try {
+      print("---------------reding from storage-----------");
+      final file = await EmployeesFile;
+      bool exists = await file.exists();
+      if (exists) {
+        try {
+          String contents = await file.readAsString();
+          Employees = DecodeEmployees(contents);
+        } catch (e) {
+          print(e.toString());
+          file.deleteSync();
+          print("-------------deleted corrupted database--------------");
+          return false;
+        }
+      } else {
+        print("---------------no data in storage-----------");
+        return false;
+      }
+    } catch (e) {}
+
+    return true;
+  }
+
   static Future<bool> SaveEquipmentToStorage() async {
     try {
-      final file = await _localFile;
+      final file = await EquipmentsFile;
       file.writeAsString(EncodeEquipments().toString());
+      print("---------------Local Database Updated-----------");
+    } catch (e) {
+      print(e.toString());
+    }
+
+    return true;
+  }
+
+  static Future<bool> SaveEmployeesToStorage() async {
+    try {
+      final file = await EmployeesFile;
+      file.writeAsString(EncodeEmployees().toString());
       print("---------------Local Database Updated-----------");
     } catch (e) {
       print(e.toString());
@@ -135,14 +195,19 @@ class db {
     return directory.path;
   }
 
-  static Future<File> get _localFile async {
+  static Future<File> get EquipmentsFile async {
     final path = await _localPath;
-    return new File('$path/localStorage.db');
+    return new File('$path/EquipmentStorage.db');
+  }
+
+  static Future<File> get EmployeesFile async {
+    final path = await _localPath;
+    return new File('$path/EmployeeStorage.db');
   }
 
   static Future<bool> DeleteRecords() async {
     try {
-      final file = await _localFile;
+      final file = await EquipmentsFile;
       bool exists = await file.exists();
       print("---------------deleting File-----------");
       if (exists) {
