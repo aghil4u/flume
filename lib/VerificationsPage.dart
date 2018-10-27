@@ -68,10 +68,14 @@ class _VerificationsPageState extends State<VerificationsPage> {
               itemCount: v == null ? 0 : v.length,
               itemBuilder: (BuildContext context, int index) {
                 return new ListTile(
-                  title: new Text(v[index].AssetNumber),
-                  //subtitle: Text(v[index].Date.substring(0,10)),
+                  title: new Text(
+                    v[index].AssetNumber + " | " + v[index].EquipmentNumber,
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: Text(v[index].AssetDescription),
+                  dense: true,
                   leading: CircleAvatar(
-                    child: Text(index.toString()),
+                    child: AvtarIcon(v, index),
                   ),
                   onTap: () {
                     Navigator.of(context).push(new MaterialPageRoute(
@@ -113,6 +117,14 @@ class _VerificationsPageState extends State<VerificationsPage> {
         shape: CircularNotchedRectangle(),
       ),
     );
+  }
+
+  Icon AvtarIcon(List<Verification> v, int index) {
+    if (v[index].Type.substring(0, 1) == "P") {
+      return new Icon(Icons.camera_alt);
+    } else {
+      return new Icon(Icons.person);
+    }
   }
 }
 
