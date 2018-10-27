@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:async/async.dart';
-import 'package:flume/Model/Verification.dart';
+import 'Verification.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
 import 'Employee.dart';

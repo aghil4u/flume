@@ -1,4 +1,4 @@
-import 'package:flume/Model/Verification.dart';
+import 'Model/Verification.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
