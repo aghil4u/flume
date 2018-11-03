@@ -68,7 +68,8 @@ class _AssetsPageState extends State<AssetsPage> {
               itemCount: equipment == null ? 0 : equipment.length,
               itemBuilder: (BuildContext context, int index) {
                 return new ListTile(
-                  title: new Text(equipment[index].EquipmentNumber),
+                  dense: true,
+                  title: new Text(equipment[index].EquipmentNumber + " | " + equipment[index].AssetNumber, style: TextStyle( fontWeight: FontWeight.bold),),
                   subtitle: Text(equipment[index].AssetDescription),
                   leading: CircleAvatar(
                     child: Text(index.toString()),
