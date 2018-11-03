@@ -9,11 +9,13 @@ import 'Model/db.dart';
 GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey();
 List<Verification> Verifications;
 
-class VerificationsPage extends StatefulWidget {
-  _VerificationsPageState createState() => _VerificationsPageState();
+class AssetDetailsVerificationsTab extends StatefulWidget {
+  AssetDetailsVerificationsTab(String assetNumber);
+
+  _AssetDetailsVerificationsTabState createState() => _AssetDetailsVerificationsTabState();
 }
 
-class _VerificationsPageState extends State<VerificationsPage> {
+class _AssetDetailsVerificationsTabState extends State<AssetDetailsVerificationsTab> {
   final _SearchDemoSearchDelegate _delegate = new _SearchDemoSearchDelegate();
   Verification selectedEquipment;
 
@@ -39,51 +41,9 @@ class _VerificationsPageState extends State<VerificationsPage> {
   Widget build(BuildContext context) {
     return new Scaffold(
       key: _scaffoldKey,
-      appBar: new AppBar(
-        title: new Text("Verifications"),
-        actions: <Widget>[
-          new IconButton(
-            tooltip: 'Search',
-            icon: const Icon(Icons.search),
-            onPressed: () async {
-              final Verification selected = await showSearch<Verification>(
-                context: context,
-                delegate: _delegate,
-              );
-              if (selected != null && selected != selectedEquipment) {
-                setState(() {
-                  selectedEquipment = selected;
-                });
-              }
-            },
-          ),
-        ],
-      ),
+      
       body: VerificationsList(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Verification v = new Verification(
-          //     AssetNumber: DateTime.now().toString(),
-          //     Date: DateTime.now().toString(),
-          //     ImageUrl: "fddfg",
-          //     Location: "sdfsdf",
-          //     Type: "sdfsdf",
-          //     User: "sdfsdf");
-          // db.PostVerification(v).whenComplete(() {
-          //   _scaffoldKey.currentState.showSnackBar(SnackBar(
-          //     content: Text('Yay! Verification Posted!'),
-          //   ));
-          // });
-        },
-        child: Icon(Icons.sort),
-        backgroundColor: Colors.blueAccent,
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-      bottomNavigationBar: new CustomBottomAppBar(
-        color: Colors.white,
-        fabLocation: FloatingActionButtonLocation.endDocked,
-        shape: CircularNotchedRectangle(),
-      ),
+      
     );
   }
 
@@ -323,7 +283,7 @@ class CustomBottomAppBar extends StatelessWidget {
             const SnackBar(content: Text('Updating database....')),
           );
           Verifications.clear();
-          _VerificationsPageState.refreshList(context);
+          _AssetDetailsVerificationsTabState.refreshList(context);
         },
       ),
     ]);
