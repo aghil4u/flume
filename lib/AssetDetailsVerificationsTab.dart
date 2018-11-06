@@ -10,7 +10,8 @@ GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey();
 List<Verification> Verifications;
 
 class AssetDetailsVerificationsTab extends StatefulWidget {
-  AssetDetailsVerificationsTab(String assetNumber);
+  final String AssetNumberReference;
+  AssetDetailsVerificationsTab({this.AssetNumberReference});
 
   _AssetDetailsVerificationsTabState createState() => _AssetDetailsVerificationsTabState();
 }
@@ -19,13 +20,13 @@ class _AssetDetailsVerificationsTabState extends State<AssetDetailsVerifications
   final _SearchDemoSearchDelegate _delegate = new _SearchDemoSearchDelegate();
   Verification selectedEquipment;
 
-  static Future<List<Verification>> getList() async {
+   Future<List<Verification>> getList() async {
     //  if (Verifications == null) {
     // await Future.delayed(Duration(seconds: 1));
 
-    await db.GetVerificationsFromServer();
+    
 
-    Verifications = db.Verifications;
+    Verifications = await db.GetFilteredVerificationsFromServer(widget.AssetNumberReference);
     // }
 
     return Verifications;

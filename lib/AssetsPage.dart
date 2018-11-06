@@ -69,7 +69,12 @@ class _AssetsPageState extends State<AssetsPage> {
               itemBuilder: (BuildContext context, int index) {
                 return new ListTile(
                   dense: true,
-                  title: new Text(equipment[index].EquipmentNumber + " | " + equipment[index].AssetNumber, style: TextStyle( fontWeight: FontWeight.bold),),
+                  title: new Text(
+                    equipment[index].EquipmentNumber +
+                        " | " +
+                        equipment[index].AssetNumber,
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                   subtitle: Text(equipment[index].AssetDescription),
                   leading: CircleAvatar(
                     child: Text(index.toString()),
@@ -135,9 +140,11 @@ class _SearchDemoSearchDelegate extends SearchDelegate<Equipment> {
     return new _SuggestionList(
       query: query,
       suggestions: suggestions.toList(),
-      onSelected: (String suggestion) {
-        query = suggestion;
-        showResults(context);
+      onSelected: (Equipment suggestion) {
+        close(context, suggestion);
+        Navigator.of(context).push(new MaterialPageRoute(
+            builder: (BuildContext) =>
+                new AssetDetailsPage(equipment: suggestion)));
       },
     );
   }
@@ -161,18 +168,10 @@ class _SearchDemoSearchDelegate extends SearchDelegate<Equipment> {
         final Equipment suggestion = finalequip[i];
         return new ListTile(
           leading: query.isEmpty ? const Icon(Icons.history) : const Icon(null),
-          title: new RichText(
-            text: new TextSpan(
-              text: suggestion.AssetDescription.substring(0, query.length),
-              style:
-                  theme.textTheme.subhead.copyWith(fontWeight: FontWeight.bold),
-              children: <TextSpan>[
-                new TextSpan(
-                  text: suggestion.AssetDescription.substring(query.length),
-                  style: theme.textTheme.subhead,
-                ),
-              ],
-            ),
+          title: Text(suggestion.AssetDescription),
+          subtitle: Text(
+            suggestion.EquipmentNumber + " | " + suggestion.OperationId,
+            style: TextStyle(fontWeight: FontWeight.bold),
           ),
           onTap: () {
             this.close(context, finalequip[i]);
@@ -188,37 +187,35 @@ class _SearchDemoSearchDelegate extends SearchDelegate<Equipment> {
   @override
   List<Widget> buildActions(BuildContext context) {
     return <Widget>[
-      query.isEmpty
-          ? new IconButton(
-              tooltip: 'Voice Search',
-              icon: const Icon(Icons.mic),
-              onPressed: () {
-                query = 'TODO: implement voice input';
-              },
-            )
-          : new IconButton(
-              tooltip: 'Clear',
-              icon: const Icon(Icons.clear),
-              onPressed: () {
-                query = '';
-                showSuggestions(context);
-              },
-            )
+      new IconButton(
+        tooltip: 'Clear',
+        icon: const Icon(Icons.clear),
+        onPressed: () {
+          query = '';
+          showSuggestions(context);
+        },
+      )
     ];
   }
 
   List<Equipment> SearchEquipments(String sq) {
     if (sq != null) {
-      var ss = equipments.where((Equipment i) =>
-          (i != null &&
-              i.AssetDescription != null &&
-              i.AssetDescription.toLowerCase().contains(sq.toLowerCase())) ||
-          (i != null &&
-              i.OperationId != null &&
-              i.OperationId.toLowerCase().contains(sq.toLowerCase())));
+      List<Equipment> ss = equipments
+          .where((Equipment i) =>
+              (i != null &&
+                  i.AssetDescription != null &&
+                  i.AssetDescription.toLowerCase()
+                      .contains(sq.toLowerCase())) ||
+              (i != null &&
+                  i.AssetNumber != null &&
+                  i.AssetNumber.contains(sq)) ||
+              (i != null &&
+                  i.OperationId != null &&
+                  i.OperationId.toLowerCase().contains(sq.toLowerCase())))
+          .toList();
 
       if (ss != null) {
-        return ss.toList();
+        return ss;
       }
     }
     return null;
@@ -230,7 +227,7 @@ class _SuggestionList extends StatelessWidget {
 
   final List<Equipment> suggestions;
   final String query;
-  final ValueChanged<String> onSelected;
+  final ValueChanged<Equipment> onSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -238,24 +235,18 @@ class _SuggestionList extends StatelessWidget {
     return new ListView.builder(
       itemCount: suggestions.length,
       itemBuilder: (BuildContext context, int i) {
-        final String suggestion = suggestions[i].AssetDescription;
+        final Equipment suggestion = suggestions[i];
         return new ListTile(
-          leading: query.isEmpty ? const Icon(Icons.history) : const Icon(null),
-          title: new RichText(
-            text: new TextSpan(
-              text: suggestion.substring(0, query.length),
-              style:
-                  theme.textTheme.subhead.copyWith(fontWeight: FontWeight.bold),
-              children: <TextSpan>[
-                new TextSpan(
-                  text: suggestion.substring(query.length),
-                  style: theme.textTheme.subhead,
-                ),
-              ],
-            ),
+          leading: query.isEmpty
+              ? const Icon(Icons.history)
+              : const Icon(Icons.history),
+          title: Text(suggestion.AssetDescription),
+          subtitle: Text(
+            suggestion.EquipmentNumber + " | " + suggestion.OperationId,
+            style: TextStyle(fontWeight: FontWeight.bold),
           ),
           onTap: () {
-            onSelected(suggestion);
+            onSelected(suggestions[i]);
           },
         );
       },

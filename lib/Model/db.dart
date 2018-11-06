@@ -281,6 +281,17 @@ class db {
   static Future<String> _compressImage(CompressObject object) async {
     return compute(decodeImage, object);
   }
+
+  static Future<List<Verification>> GetFilteredVerificationsFromServer(String assetNumberReference) async{
+     print("---------------geting data from server-----------");
+    http.Client client = new http.Client();
+    final response = await client.get("http://xo.rs/api/Verifications/"+assetNumberReference,
+        headers: {"Accept": "application/json"});
+    // print(response.body.length);
+    print("---------------data downloaded-----------");
+    
+    return DecodeVerifications(response.body);
+  }
 }
 
 class CompressObject {
