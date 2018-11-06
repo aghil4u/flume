@@ -85,7 +85,11 @@ class _AssetDetailsPageState extends State<AssetDetailsPage> with SingleTickerPr
   } 
 
   Widget VerificationsTab() {
+<<<<<<< HEAD
     return AssetDetailsVerificationsTab( AssetNumberReference: widget.equipment.AssetNumber,);
+=======
+    return AssetDetailsVerificationsTab(widget.equipment.AssetNumber);
+>>>>>>> 75c61522f4522312b2b82fc9d22d0125015499d1
   }
 
   ListView AssetDetailsTab() {
