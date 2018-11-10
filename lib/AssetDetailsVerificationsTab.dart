@@ -10,37 +10,24 @@ GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey();
 List<Verification> Verifications;
 
 class AssetDetailsVerificationsTab extends StatefulWidget {
-<<<<<<< HEAD
   final String AssetNumberReference;
   AssetDetailsVerificationsTab({this.AssetNumberReference});
-=======
-  AssetDetailsVerificationsTab(String assetNumber);
->>>>>>> 75c61522f4522312b2b82fc9d22d0125015499d1
 
-  _AssetDetailsVerificationsTabState createState() => _AssetDetailsVerificationsTabState();
+  _AssetDetailsVerificationsTabState createState() =>
+      _AssetDetailsVerificationsTabState();
 }
 
-class _AssetDetailsVerificationsTabState extends State<AssetDetailsVerificationsTab> {
+class _AssetDetailsVerificationsTabState
+    extends State<AssetDetailsVerificationsTab> {
   final _SearchDemoSearchDelegate _delegate = new _SearchDemoSearchDelegate();
   Verification selectedEquipment;
 
-<<<<<<< HEAD
-   Future<List<Verification>> getList() async {
+  Future<List<Verification>> getList() async {
     //  if (Verifications == null) {
     // await Future.delayed(Duration(seconds: 1));
 
-    
-
-    Verifications = await db.GetFilteredVerificationsFromServer(widget.AssetNumberReference);
-=======
-  static Future<List<Verification>> getList() async {
-    //  if (Verifications == null) {
-    // await Future.delayed(Duration(seconds: 1));
-
-    await db.GetVerificationsFromServer();
-
-    Verifications = db.Verifications;
->>>>>>> 75c61522f4522312b2b82fc9d22d0125015499d1
+    Verifications = await db.GetFilteredVerificationsFromServer(
+        widget.AssetNumberReference);
     // }
 
     return Verifications;
@@ -56,9 +43,7 @@ class _AssetDetailsVerificationsTabState extends State<AssetDetailsVerifications
   Widget build(BuildContext context) {
     return new Scaffold(
       key: _scaffoldKey,
-      
       body: VerificationsList(),
-      
     );
   }
 
@@ -83,8 +68,8 @@ class _AssetDetailsVerificationsTabState extends State<AssetDetailsVerifications
                 ),
                 onTap: () {
                   Navigator.of(context).push(new MaterialPageRoute(
-                      builder: (BuildContext) => new VerificationDetailsPage(
-                          verification: v[index])));
+                      builder: (BuildContext) =>
+                          new VerificationDetailsPage(verification: v[index])));
                 },
               );
             },
@@ -172,7 +157,7 @@ class _SearchDemoSearchDelegate extends SearchDelegate<Verification> {
               ],
             ),
           ),
-          subtitle:Text(finalequip[i].AssetDescription) ,
+          subtitle: Text(finalequip[i].AssetDescription),
           onTap: () {
             this.close(context, finalequip[i]);
             Navigator.of(context).push(new MaterialPageRoute(
@@ -212,10 +197,9 @@ class _SearchDemoSearchDelegate extends SearchDelegate<Verification> {
           (i != null &&
               i.EquipmentNumber != null &&
               i.EquipmentNumber.toLowerCase().contains(sq.toLowerCase())) ||
-               (i != null &&
+          (i != null &&
               i.AssetDescription != null &&
               i.AssetDescription.toLowerCase().contains(sq.toLowerCase())) ||
-              
           (i != null &&
               i.AssetNumber != null &&
               i.AssetNumber.toLowerCase().contains(sq.toLowerCase())));
@@ -244,8 +228,8 @@ class _SuggestionList extends StatelessWidget {
         final String suggestion = suggestions[i].AssetNumber;
         return new ListTile(
           leading: query.isEmpty ? const Icon(Icons.history) : const Icon(null),
-          subtitle:Text( suggestions[i].AssetDescription),
-          title: Text( suggestion),
+          subtitle: Text(suggestions[i].AssetDescription),
+          title: Text(suggestion),
           onTap: () {
             onSelected(suggestion);
           },

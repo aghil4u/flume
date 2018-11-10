@@ -133,10 +133,12 @@ class _AssetDetailsPageState extends State<VerificationDetailsPage> {
                         Divider(
                           height: 30.0,
                         ),
-                        Image.network(
-                          widget.verification.ImageUrl,
-                          scale: 1.0,
+                        FadeInImage.assetNetwork(
+                          image: widget.verification.ImageUrl,
                           repeat: ImageRepeat.noRepeat,
+                          //height: 300.0,
+                          fadeInDuration: Duration(seconds: 1),
+                          placeholder: "Images/logo.png",
                         ),
                       ],
                     )),
