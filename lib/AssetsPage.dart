@@ -4,12 +4,14 @@ import 'AssetDetailsPage.dart';
 import 'Model/Equipment.dart';
 import 'Model/db.dart';
 
-var refreshKey = GlobalKey<RefreshIndicatorState>();
-List<Equipment> equipmentsMasterList;
-List<Equipment> equipmentsFilterdList;
+var refreshKey = GlobalKey<ScaffoldState>();
+
 List<String> FilterOptions;
 List<bool> FilterStatus;
 List<String> SelectedFilters;
+
+List<Equipment> equipmentsMasterList;
+List<Equipment> equipmentsFilterdList;
 
 class AssetsPage extends StatefulWidget {
   _AssetsPageState createState() => _AssetsPageState();
@@ -19,7 +21,13 @@ class _AssetsPageState extends State<AssetsPage> {
   final _SearchDemoSearchDelegate _delegate = new _SearchDemoSearchDelegate();
   Equipment selectedEquipment;
 
-  static Future<List<Equipment>> getList() async {
+  @override
+  void initState() {
+    super.initState();
+    InitializeFilters();
+  }
+
+  Future<List<Equipment>> getList() async {
     if (equipmentsMasterList == null) {
       await Future.delayed(Duration(seconds: 1));
 
@@ -30,7 +38,6 @@ class _AssetsPageState extends State<AssetsPage> {
       equipmentsMasterList = db.Equipments;
     }
 
-    InitializeFilters();
     DoFilter();
 
     return equipmentsFilterdList;
@@ -39,14 +46,16 @@ class _AssetsPageState extends State<AssetsPage> {
   static void refreshList(BuildContext context) {
     db.DeleteEqdb();
     //Navigator.pop(context);
+
     equipmentsMasterList = null;
   }
 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      key: refreshKey,
       appBar: new AppBar(
-        title: new Text("ASSET MASTER"),
+        title: new Text("ASSETS"),
         actions: <Widget>[
           new IconButton(
             tooltip: 'Search',
@@ -121,20 +130,124 @@ class _AssetsPageState extends State<AssetsPage> {
   }
 
   static void DoFilter() {
-    equipmentsFilterdList = equipmentsMasterList
-        // .where((e) => SelectedFilters.any((ee) => ee == e.SubType))
-        .toList();
+    if (SelectedFilters.length > 0) {
+      equipmentsFilterdList = equipmentsMasterList
+          .where((e) => e.SubType == SelectedFilters[0])
+          .toList();
+    } else {
+      equipmentsFilterdList = equipmentsMasterList;
+    }
   }
 
   static void InitializeFilters() {
     FilterOptions = [
-      "MECHANICAL CLOCKS",
-      "POWER PACKS",
-      "QUARTZ",
-      "PDS",
-      "OFFSHORE UNITS"
+      "ROPE SOCKETS",
+      "STEM BARS",
+      "KNUCKLE JOINTS",
+      "SWIVEL JOINTS",
+      "HIGH DEVEIATION TOOLS",
+      "ACCELERATORS",
+      "SHOCK ABSORVERS",
+      "CENTRALIZERS",
+      "STRING X.OVER",
+      "MECHANICAL JARS",
+      "HYD JARS",
+      "KNUCKLE JARS",
+      "TUBULAR JARS ",
+      "SPRING JARS",
+      "PLUG SUBS AND PRONGS",
+      "TESTING VALVES",
+      "SAFETY VALVES",
+      "SEPERATION SLEVES",
+      "LOCKS",
+      "HANGERS",
+      "GAS LIFT VALVES",
+      "KICK OVER TOOLS",
+      "SPACERS",
+      "PULLING & RUNNING TOOLS",
+      "GO DEVIL",
+      "WIRE CUTTER",
+      "OVERSHOT",
+      "SPEARS",
+      "BLIND BOX",
+      "IMPRESSION BLOCK",
+      "WIRE FINDERS",
+      "GRABS",
+      "MAGNETS ",
+      "SELECTIVE SHIFTING TOOLS",
+      "NON SELECTIVE SHIFTING TOOLS",
+      "GAUGE CUTTERS",
+      "TUBING BROACHES",
+      "SCRATCHERS",
+      "SWAGGING TOOLS",
+      "BAILERS AND DUMBERS",
+      "TUBING END LOCATORS",
+      "TUUBING PERFORATORS ",
+      "ANTI BLOW OUT TOOLS",
+      "OFFSHORE UNITS",
+      "ONSHORE UNITS",
+      "PUMPING UNITS",
+      "SPOOLING UNITS",
+      "HYD GINPOLE",
+      "MANUAL GINPOLE",
+      "PRESSURE TEST PANELS",
+      "BOP AND VALVES CONTROL PANELS",
+      "GRASE AND HYD CONTROL PANELS",
+      "POWERPACK",
+      "TOOL BOX",
+      "BASKETS",
+      "CRANES",
+      "SLINGS ",
+      " MANUAL HYDRAULIC FORK LIFTS",
+      "TROLLEYS",
+      "WIRELINE ACCESSORIES",
+      "STUFFING BOX",
+      "LUBRICATOR",
+      "GREASE INJECTION HEAD ",
+      "INJECTION SUB",
+      "QUICK TEST SUB",
+      "LINE WIPER",
+      "TOOL CATCHER",
+      "BOP",
+      "WELL HEAD ADAPTERS",
+      "TOOL TRAP",
+      "INHIBITOR SUB",
+      "PUMP IN SUB ",
+      "COMPUTERS",
+      "PROJECTORS ",
+      "TELEVESIONS",
+      "MOBILE PHONES",
+      "LOAD CELLS ",
+      "CRANE PANELS",
+      "OFFICE - CAMP FURNITURES",
+      "WORKSHOP RELATED FURNITURES",
+      "KITCHEN FIXTURES",
+      "SEDAN CARS",
+      "4X4 CARS",
+      "PICKUPS",
+      "TRUCK UNIT",
+      "TRUCK CRANE",
+      "FLAT BED TRUCK ",
+      "TANKER TRUCK",
+      "FORKLIFT",
+      "BREATHING APPARATUS",
+      "GAS DETECTORS",
+      "IVMS-VMD",
+      "SCAFFOLDING",
+      "DIESEL FUEL TANK",
+      "PERTOL FUEL TANK",
+      "WATER TANKS",
+      "CHIMICAL TANKS ",
+      "GENERATORS",
+      "COMPRESSORS",
+      "FUEL PUMP",
+      "WATER PUMP",
+      "FUEL STATIONS",
+      "FANS",
+      "OTHERS"
     ];
-    FilterStatus = [false, false, false, true, true];
+    FilterStatus = List.filled(104, false);
+    ;
     SelectedFilters = new List<String>();
   }
 }
@@ -166,6 +279,8 @@ class _FilterDrawerState extends State<FilterDrawer> {
                     SelectedFilters.remove(FilterOptions[index]);
                   }
                 }
+                print(SelectedFilters.length);
+                refreshKey?.currentState.setState(() {});
               });
             },
           );

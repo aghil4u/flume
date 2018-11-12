@@ -282,14 +282,16 @@ class db {
     return compute(decodeImage, object);
   }
 
-  static Future<List<Verification>> GetFilteredVerificationsFromServer(String assetNumberReference) async{
-     print("---------------geting data from server-----------");
+  static Future<List<Verification>> GetFilteredVerificationsFromServer(
+      String assetNumberReference) async {
+    print("---------------geting data from server-----------");
     http.Client client = new http.Client();
-    final response = await client.get("http://xo.rs/api/Verifications/"+assetNumberReference,
+    final response = await client.get(
+        "http://xo.rs/api/Verifications/" + assetNumberReference,
         headers: {"Accept": "application/json"});
     // print(response.body.length);
     print("---------------data downloaded-----------");
-    
+
     return DecodeVerifications(response.body);
   }
 }

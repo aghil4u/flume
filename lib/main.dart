@@ -134,25 +134,6 @@ class HomePage extends StatelessWidget {
                   backgroundColor: Colors.white,
                   child: new Text("A"),
                 )),
-            new ListTile(
-              title: new Text("Asset Master"),
-              leading: new Icon(Icons.list),
-              onTap: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).push(new MaterialPageRoute(
-                    builder: (BuildContext) => new AssetsPage()));
-              },
-            ),
-            new ListTile(
-              title: new Text("Page Two"),
-              leading: new Icon(Icons.library_books),
-            ),
-            new Divider(),
-            new ListTile(
-              title: new Text("Close"),
-              leading: new Icon(Icons.close),
-              onTap: () => Navigator.of(context).pop(),
-            ),
           ],
         ),
       ),

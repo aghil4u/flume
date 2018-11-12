@@ -1,5 +1,4 @@
 import 'package:flume/AssetDetailsVerificationsTab.dart';
-
 import 'Model/Verification.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -17,11 +16,11 @@ class AssetDetailsPage extends StatefulWidget {
   _AssetDetailsPageState createState() => _AssetDetailsPageState();
 }
 
-class _AssetDetailsPageState extends State<AssetDetailsPage> with SingleTickerProviderStateMixin {
-
+class _AssetDetailsPageState extends State<AssetDetailsPage>
+    with SingleTickerProviderStateMixin {
   TabController controller;
 
-   @override
+  @override
   void initState() {
     super.initState();
     controller = new TabController(length: 3, vsync: this);
@@ -45,330 +44,316 @@ class _AssetDetailsPageState extends State<AssetDetailsPage> with SingleTickerPr
         label: Text("Verify"),
       ),
       body: NestedScrollView(
-      
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return <Widget>[
             SliverAppBar(
-             
               expandedHeight: 200.0,
-               floating: false,
+              floating: false,
               pinned: true,
-             title: Text(
-                  widget.equipment.EquipmentNumber,
-                ),
-               bottom: new TabBar(
-              tabs: [
-                new Tab(text: 'DETAILS'),
-                new Tab(text: 'VERIFICATIONS'),
-                new Tab(text: 'PHOTOS'),
-              ],
-              controller: controller,
-            ),
+              title: Text(
+                widget.equipment.EquipmentNumber,
+              ),
+              bottom: new TabBar(
+                tabs: [
+                  new Tab(text: 'DETAILS'),
+                  new Tab(text: 'VERIFICATIONS'),
+                  new Tab(text: 'PHOTOS'),
+                ],
+                controller: controller,
+              ),
             ),
           ];
         },
         body: TabBarView(
           controller: controller,
           children: <Widget>[
-                AssetDetailsTab(),
-
-               VerificationsTab(),
-               PhotosTab(),
-             ],),
-
+            AssetDetailsTab(),
+            VerificationsTab(),
+            PhotosTab(),
+          ],
+        ),
       ),
     );
   }
 
-  Widget PhotosTab(){
-  return Text("Photos");
-  } 
+  Widget PhotosTab() {
+    return Text("Photos");
+  }
 
   Widget VerificationsTab() {
-<<<<<<< HEAD
-    return AssetDetailsVerificationsTab( AssetNumberReference: widget.equipment.AssetNumber,);
-=======
-    return AssetDetailsVerificationsTab(widget.equipment.AssetNumber);
->>>>>>> 75c61522f4522312b2b82fc9d22d0125015499d1
+    return AssetDetailsVerificationsTab(
+      AssetNumberReference: widget.equipment.AssetNumber,
+    );
   }
 
   ListView AssetDetailsTab() {
     return ListView(
-        children: <Widget>[
-          new SizedBox(
-            child: new Card(
-              elevation: 2.0,
-              margin:
-                  const EdgeInsets.only(top: 0.0, left: 20.0, right: 20.0),
-              child: new Padding(
-                  padding: new EdgeInsets.all(10.0),
-                  child: Column(
-                    children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          new Text(
-                            widget.equipment.EquipmentDescription,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                      Divider(),
-                      //-------------------------------------------------------------------
+      children: <Widget>[
+        new SizedBox(
+          child: new Card(
+            elevation: 2.0,
+            margin: const EdgeInsets.only(top: 0.0, left: 20.0, right: 20.0),
+            child: new Padding(
+                padding: new EdgeInsets.all(10.0),
+                child: Column(
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        new Text(
+                          widget.equipment.EquipmentDescription,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                    Divider(),
+                    //-------------------------------------------------------------------
 
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          Column(
-                            children: <Widget>[
-                              Text("SAP EIN",
-                                  style: TextStyle(
-                                      fontSize: 15.0, color: Colors.grey)),
-                              Divider(
-                                height: 5.0,
-                              ),
-                              Text(widget.equipment.EquipmentNumber,
-                                  style: TextStyle(
-                                      fontSize: 20.0,
-                                      fontWeight: FontWeight.bold))
-                            ],
-                          ),
-                          Column(
-                            children: <Widget>[
-                              Text("ASSET",
-                                  style: TextStyle(
-                                      fontSize: 15.0, color: Colors.grey)),
-                              Divider(
-                                height: 5.0,
-                              ),
-                              Text(widget.equipment.AssetNumber,
-                                  style: TextStyle(
-                                      fontSize: 20.0,
-                                      fontWeight: FontWeight.bold))
-                            ],
-                          )
-                        ],
-                      )
-                    ],
-                  )),
-            ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        Column(
+                          children: <Widget>[
+                            Text("SAP EIN",
+                                style: TextStyle(
+                                    fontSize: 15.0, color: Colors.grey)),
+                            Divider(
+                              height: 5.0,
+                            ),
+                            Text(widget.equipment.EquipmentNumber,
+                                style: TextStyle(
+                                    fontSize: 20.0,
+                                    fontWeight: FontWeight.bold))
+                          ],
+                        ),
+                        Column(
+                          children: <Widget>[
+                            Text("ASSET",
+                                style: TextStyle(
+                                    fontSize: 15.0, color: Colors.grey)),
+                            Divider(
+                              height: 5.0,
+                            ),
+                            Text(widget.equipment.AssetNumber,
+                                style: TextStyle(
+                                    fontSize: 20.0,
+                                    fontWeight: FontWeight.bold))
+                          ],
+                        )
+                      ],
+                    )
+                  ],
+                )),
           ),
-          Divider(
-            height: 20.0,
-            color: Colors.transparent,
-          ),
+        ),
+        Divider(
+          height: 20.0,
+          color: Colors.transparent,
+        ),
 
-          //-------------------------------------------------------------------
-          SizedBox(
-            child: new Card(
-              elevation: 2.0,
-              margin:
-                  const EdgeInsets.only(top: 0.0, left: 20.0, right: 20.0),
-              child: new Padding(
-                  padding: new EdgeInsets.all(15.0),
-                  child: Column(
-                    children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          new Text(
-                            "ASSET DETAILS",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.grey),
-                          ),
-                        ],
-                      ),
-                      Divider(
-                        height: 30.0,
-                      ),
-                      Column(
-                        children: <Widget>[
+        //-------------------------------------------------------------------
+        SizedBox(
+          child: new Card(
+            elevation: 2.0,
+            margin: const EdgeInsets.only(top: 0.0, left: 20.0, right: 20.0),
+            child: new Padding(
+                padding: new EdgeInsets.all(15.0),
+                child: Column(
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        new Text(
+                          "ASSET DETAILS",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, color: Colors.grey),
+                        ),
+                      ],
+                    ),
+                    Divider(
+                      height: 30.0,
+                    ),
+                    Column(
+                      children: <Widget>[
 //-------------------------------------------------------------------
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Text("ACQUISITION DATE",
-                                  style: TextStyle(
-                                      fontSize: 15.0, color: Colors.grey)),
-                              Text(widget.equipment.AcquisitionDate,
-                                  style: TextStyle(
-                                      fontSize: 15.0, color: Colors.black)),
-                            ],
-                          ),
-                          Divider(
-                            height: 10.0,
-                            color: Colors.transparent,
-                          ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text("ACQUISITION DATE",
+                                style: TextStyle(
+                                    fontSize: 15.0, color: Colors.grey)),
+                            Text(widget.equipment.AcquisitionDate,
+                                style: TextStyle(
+                                    fontSize: 15.0, color: Colors.black)),
+                          ],
+                        ),
+                        Divider(
+                          height: 10.0,
+                          color: Colors.transparent,
+                        ),
 //-------------------------------------------------------------------
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Text("ACQUISITION VALUE",
-                                  style: TextStyle(
-                                      fontSize: 15.0, color: Colors.grey)),
-                              Text(
-                                  widget.equipment.AcquisitionValue
-                                          .toString() +
-                                      " AED",
-                                  style: TextStyle(
-                                      fontSize: 15.0, color: Colors.black)),
-                            ],
-                          ),
-                          Divider(
-                            height: 10.0,
-                            color: Colors.transparent,
-                          ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text("ACQUISITION VALUE",
+                                style: TextStyle(
+                                    fontSize: 15.0, color: Colors.grey)),
+                            Text(
+                                widget.equipment.AcquisitionValue.toString() +
+                                    " AED",
+                                style: TextStyle(
+                                    fontSize: 15.0, color: Colors.black)),
+                          ],
+                        ),
+                        Divider(
+                          height: 10.0,
+                          color: Colors.transparent,
+                        ),
 //-------------------------------------------------------------------
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Text("BOOK VALUE",
-                                  style: TextStyle(
-                                      fontSize: 15.0, color: Colors.grey)),
-                              Text(
-                                  widget.equipment.BookValue.toString() +
-                                      " AED",
-                                  style: TextStyle(
-                                      fontSize: 15.0, color: Colors.black)),
-                            ],
-                          ),
-                          Divider(
-                            height: 10.0,
-                            color: Colors.transparent,
-                          ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text("BOOK VALUE",
+                                style: TextStyle(
+                                    fontSize: 15.0, color: Colors.grey)),
+                            Text(widget.equipment.BookValue.toString() + " AED",
+                                style: TextStyle(
+                                    fontSize: 15.0, color: Colors.black)),
+                          ],
+                        ),
+                        Divider(
+                          height: 10.0,
+                          color: Colors.transparent,
+                        ),
 //-------------------------------------------------------------------
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Text("ASSET LOCATION",
-                                  style: TextStyle(
-                                      fontSize: 15.0, color: Colors.grey)),
-                              Text(widget.equipment.AssetLocation,
-                                  style: TextStyle(
-                                      fontSize: 15.0, color: Colors.black)),
-                            ],
-                          ),
-                          Divider(
-                            height: 10.0,
-                            color: Colors.transparent,
-                          ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text("ASSET LOCATION",
+                                style: TextStyle(
+                                    fontSize: 15.0, color: Colors.grey)),
+                            Text(widget.equipment.AssetLocation,
+                                style: TextStyle(
+                                    fontSize: 15.0, color: Colors.black)),
+                          ],
+                        ),
+                        Divider(
+                          height: 10.0,
+                          color: Colors.transparent,
+                        ),
 //-------------------------------------------------------------------
-                        ],
-                      ),
-                    ],
-                  )),
-            ),
+                      ],
+                    ),
+                  ],
+                )),
           ),
-          Divider(
-            height: 20.0,
-            color: Colors.transparent,
-          ),
+        ),
+        Divider(
+          height: 20.0,
+          color: Colors.transparent,
+        ),
 
-          //-------------------------------------------------------------------
-          SizedBox(
-            child: new Card(
-              elevation: 2.0,
-              margin:
-                  const EdgeInsets.only(top: 0.0, left: 20.0, right: 20.0),
-              child: new Padding(
-                  padding: new EdgeInsets.all(15.0),
-                  child: Column(
-                    children: <Widget>[
-                      //-------------------------------------------------------------------
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          new Text(
-                            "EQUIPMENT DETAILS",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.grey),
-                          ),
-                        ],
-                      ),
-                      Divider(
-                        height: 30.0,
-                      ),
-                      Column(
-                        children: <Widget>[
+        //-------------------------------------------------------------------
+        SizedBox(
+          child: new Card(
+            elevation: 2.0,
+            margin: const EdgeInsets.only(top: 0.0, left: 20.0, right: 20.0),
+            child: new Padding(
+                padding: new EdgeInsets.all(15.0),
+                child: Column(
+                  children: <Widget>[
+                    //-------------------------------------------------------------------
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        new Text(
+                          "EQUIPMENT DETAILS",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, color: Colors.grey),
+                        ),
+                      ],
+                    ),
+                    Divider(
+                      height: 30.0,
+                    ),
+                    Column(
+                      children: <Widget>[
 //-------------------------------------------------------------------
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Text("OPERATION ID",
-                                  style: TextStyle(
-                                      fontSize: 15.0, color: Colors.grey)),
-                              Text(widget.equipment.OperationId,
-                                  style: TextStyle(
-                                      fontSize: 15.0, color: Colors.black)),
-                            ],
-                          ),
-                          Divider(
-                            height: 10.0,
-                            color: Colors.transparent,
-                          ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text("OPERATION ID",
+                                style: TextStyle(
+                                    fontSize: 15.0, color: Colors.grey)),
+                            Text(widget.equipment.OperationId,
+                                style: TextStyle(
+                                    fontSize: 15.0, color: Colors.black)),
+                          ],
+                        ),
+                        Divider(
+                          height: 10.0,
+                          color: Colors.transparent,
+                        ),
 //-------------------------------------------------------------------
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Text("EQUIPMENT TYPE",
-                                  style: TextStyle(
-                                      fontSize: 15.0, color: Colors.grey)),
-                              Text(widget.equipment.SubType,
-                                  style: TextStyle(
-                                      fontSize: 15.0, color: Colors.black)),
-                            ],
-                          ),
-                          Divider(
-                            height: 10.0,
-                            color: Colors.transparent,
-                          ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text("EQUIPMENT TYPE",
+                                style: TextStyle(
+                                    fontSize: 15.0, color: Colors.grey)),
+                            Text(widget.equipment.SubType,
+                                style: TextStyle(
+                                    fontSize: 15.0, color: Colors.black)),
+                          ],
+                        ),
+                        Divider(
+                          height: 10.0,
+                          color: Colors.transparent,
+                        ),
 //-------------------------------------------------------------------
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Text("MODEL NUMBER",
-                                  style: TextStyle(
-                                      fontSize: 15.0, color: Colors.grey)),
-                              Text(widget.equipment.ModelNumber,
-                                  style: TextStyle(
-                                      fontSize: 15.0, color: Colors.black)),
-                            ],
-                          ),
-                          Divider(
-                            height: 10.0,
-                            color: Colors.transparent,
-                          ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text("MODEL NUMBER",
+                                style: TextStyle(
+                                    fontSize: 15.0, color: Colors.grey)),
+                            Text(widget.equipment.ModelNumber,
+                                style: TextStyle(
+                                    fontSize: 15.0, color: Colors.black)),
+                          ],
+                        ),
+                        Divider(
+                          height: 10.0,
+                          color: Colors.transparent,
+                        ),
 //-------------------------------------------------------------------
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Text("SERIAL NUMBER",
-                                  style: TextStyle(
-                                      fontSize: 15.0, color: Colors.grey)),
-                              Text(widget.equipment.SerialNumber,
-                                  style: TextStyle(
-                                      fontSize: 15.0, color: Colors.black)),
-                            ],
-                          ),
-                          Divider(
-                            height: 10.0,
-                            color: Colors.transparent,
-                          ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text("SERIAL NUMBER",
+                                style: TextStyle(
+                                    fontSize: 15.0, color: Colors.grey)),
+                            Text(widget.equipment.SerialNumber,
+                                style: TextStyle(
+                                    fontSize: 15.0, color: Colors.black)),
+                          ],
+                        ),
+                        Divider(
+                          height: 10.0,
+                          color: Colors.transparent,
+                        ),
 //-------------------------------------------------------------------
-                        ],
-                      ),
-                    ],
-                  )),
-            ),
+                      ],
+                    ),
+                  ],
+                )),
           ),
-         
-        ],
-      );
+        ),
+      ],
+    );
   }
 }
 
@@ -399,13 +384,32 @@ class VerificationDrawer extends StatelessWidget {
 
                   if (value != null) {
                     print(value);
+
+                    var position = null;
+                    String location = "";
+
+                    print("---------trying to get location------");
+                    //position = await Location().getLocation();
+                    if (position != null) {
+                      String location = " LAT:" +
+                          position["latitude"].toString() +
+                          " LON:" +
+                          position["longitude"].toString() +
+                          " ACCURACY:" +
+                          position["accuracy"].toString();
+                      print(location);
+                    } else {
+                      _assetDetailsScaffoldKey.currentState.showSnackBar(
+                          SnackBar(content: Text('No Access to Location ')));
+                    }
+
                     Verification v = new Verification(
                         AssetNumber: e.AssetNumber,
                         EquipmentNumber: e.EquipmentNumber,
                         AssetDescription: e.AssetDescription,
                         Date: DateTime.now().toString(),
                         ImageUrl: value,
-                        Location: "",
+                        Location: location,
                         Type: "PhotoVerification",
                         User: "DefaultUser");
                     db.PostVerification(v).whenComplete(() {
