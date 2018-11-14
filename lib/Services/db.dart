@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'package:async/async.dart';
-import 'Verification.dart';
+import 'package:flume/Model/Employee.dart';
+import 'package:flume/Model/Equipment.dart';
+import 'package:flume/Model/Verification.dart';
+
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
-import 'Employee.dart';
-import 'Equipment.dart';
+
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'dart:io';

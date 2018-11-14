@@ -1,33 +1,29 @@
-import 'package:flume/VerificationDetailsPage.dart';
+import 'package:flume/Model/Verification.dart';
+import 'package:flume/Pages/VerificationDetailsPage.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'AssetDetailsPage.dart';
-import 'Model/Verification.dart';
-import 'Model/db.dart';
+
+import 'package:flume/Services/db.dart';
 
 //var refreshKey = GlobalKey<RefreshIndicatorState>();
 GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey();
 List<Verification> Verifications;
 
-class AssetDetailsVerificationsTab extends StatefulWidget {
-  final String AssetNumberReference;
-  AssetDetailsVerificationsTab({this.AssetNumberReference});
-
-  _AssetDetailsVerificationsTabState createState() =>
-      _AssetDetailsVerificationsTabState();
+class VerificationsPage extends StatefulWidget {
+  _VerificationsPageState createState() => _VerificationsPageState();
 }
 
-class _AssetDetailsVerificationsTabState
-    extends State<AssetDetailsVerificationsTab> {
+class _VerificationsPageState extends State<VerificationsPage> {
   final _SearchDemoSearchDelegate _delegate = new _SearchDemoSearchDelegate();
   Verification selectedEquipment;
 
-  Future<List<Verification>> getList() async {
+  static Future<List<Verification>> getList() async {
     //  if (Verifications == null) {
     // await Future.delayed(Duration(seconds: 1));
 
-    Verifications = await db.GetFilteredVerificationsFromServer(
-        widget.AssetNumberReference);
+    await db.GetVerificationsFromServer();
+
+    Verifications = db.Verifications;
     // }
 
     return Verifications;
@@ -43,7 +39,51 @@ class _AssetDetailsVerificationsTabState
   Widget build(BuildContext context) {
     return new Scaffold(
       key: _scaffoldKey,
+      appBar: new AppBar(
+        title: new Text("Verifications"),
+        actions: <Widget>[
+          new IconButton(
+            tooltip: 'Search',
+            icon: const Icon(Icons.search),
+            onPressed: () async {
+              final Verification selected = await showSearch<Verification>(
+                context: context,
+                delegate: _delegate,
+              );
+              if (selected != null && selected != selectedEquipment) {
+                setState(() {
+                  selectedEquipment = selected;
+                });
+              }
+            },
+          ),
+        ],
+      ),
       body: VerificationsList(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // Verification v = new Verification(
+          //     AssetNumber: DateTime.now().toString(),
+          //     Date: DateTime.now().toString(),
+          //     ImageUrl: "fddfg",
+          //     Location: "sdfsdf",
+          //     Type: "sdfsdf",
+          //     User: "sdfsdf");
+          // db.PostVerification(v).whenComplete(() {
+          //   _scaffoldKey.currentState.showSnackBar(SnackBar(
+          //     content: Text('Yay! Verification Posted!'),
+          //   ));
+          // });
+        },
+        child: Icon(Icons.sort),
+        backgroundColor: Colors.blueAccent,
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+      bottomNavigationBar: new CustomBottomAppBar(
+        color: Colors.white,
+        fabLocation: FloatingActionButtonLocation.endDocked,
+        shape: CircularNotchedRectangle(),
+      ),
     );
   }
 
@@ -282,7 +322,7 @@ class CustomBottomAppBar extends StatelessWidget {
             const SnackBar(content: Text('Updating database....')),
           );
           Verifications.clear();
-          _AssetDetailsVerificationsTabState.refreshList(context);
+          _VerificationsPageState.refreshList(context);
         },
       ),
     ]);

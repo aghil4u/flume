@@ -1,6 +1,6 @@
 import 'package:flume/Model/Verification.dart';
 import 'package:flutter/material.dart';
-import 'Model/db.dart';
+import 'package:flume/Services/db.dart';
 
 GlobalKey<ScaffoldState> _assetDetailsScaffoldKey = new GlobalKey();
 

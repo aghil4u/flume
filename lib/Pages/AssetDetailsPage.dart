@@ -1,10 +1,10 @@
-import 'package:flume/AssetDetailsVerificationsTab.dart';
-import 'Model/Verification.dart';
+import 'package:flume/Model/Equipment.dart';
+import 'package:flume/Model/Verification.dart';
+import 'package:flume/Pages/AssetDetailsVerificationsTab.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import 'Model/Equipment.dart';
-import 'Model/db.dart';
+import 'package:flume/Services/db.dart';
 
 GlobalKey<ScaffoldState> _assetDetailsScaffoldKey = new GlobalKey();
 

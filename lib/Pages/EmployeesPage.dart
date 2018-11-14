@@ -1,79 +1,107 @@
-import 'package:flume/VerificationDetailsPage.dart';
+import 'package:flume/Model/Employee.dart';
+import 'package:flume/Services/db.dart';
+import 'EmployeeDetailsPage.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'AssetDetailsPage.dart';
-import 'Model/Verification.dart';
-import 'Model/db.dart';
 
-//var refreshKey = GlobalKey<RefreshIndicatorState>();
-GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey();
-List<Verification> Verifications;
+var refreshKey = GlobalKey<RefreshIndicatorState>();
+List<Employee> employees;
 
-class VerificationsPage extends StatefulWidget {
-  _VerificationsPageState createState() => _VerificationsPageState();
+class EmployeesPage extends StatefulWidget {
+  _EmployeesPageState createState() => _EmployeesPageState();
 }
 
-class _VerificationsPageState extends State<VerificationsPage> {
+class _EmployeesPageState extends State<EmployeesPage> {
   final _SearchDemoSearchDelegate _delegate = new _SearchDemoSearchDelegate();
-  Verification selectedEquipment;
+  Employee selectedEmployee;
 
-  static Future<List<Verification>> getList() async {
-    //  if (Verifications == null) {
-    // await Future.delayed(Duration(seconds: 1));
+  static Future<List<Employee>> getList() async {
+    if (employees == null) {
+      await Future.delayed(Duration(seconds: 1));
 
-    await db.GetVerificationsFromServer();
+      if (await db.GetEmployeesFromStorage() == false) {
+        await db.GetEmployeesFromServer();
+        await db.SaveEmployeesToStorage();
+      }
 
-    Verifications = db.Verifications;
-    // }
+      employees = db.Employees;
+    }
 
-    return Verifications;
+    return employees;
   }
 
   static void refreshList(BuildContext context) {
-    //db.DeleteEqdb();
+    db.DeleteEmdb();
     //Navigator.pop(context);
-    Verifications = null;
+    employees = null;
   }
 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      key: _scaffoldKey,
       appBar: new AppBar(
-        title: new Text("Verifications"),
+        title: new Text("MWS EMPLOYEES"),
         actions: <Widget>[
           new IconButton(
             tooltip: 'Search',
             icon: const Icon(Icons.search),
             onPressed: () async {
-              final Verification selected = await showSearch<Verification>(
+              final Employee selected = await showSearch<Employee>(
                 context: context,
                 delegate: _delegate,
               );
-              if (selected != null && selected != selectedEquipment) {
+              if (selected != null && selected != selectedEmployee) {
                 setState(() {
-                  selectedEquipment = selected;
+                  selectedEmployee = selected;
                 });
               }
             },
           ),
         ],
       ),
-      body: VerificationsList(),
+      body: FutureBuilder<List<Employee>>(
+        future: getList(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            var Employee = snapshot.data;
+            return new ListView.builder(
+              physics: const AlwaysScrollableScrollPhysics(),
+              itemCount: Employee == null ? 0 : Employee.length,
+              itemBuilder: (BuildContext context, int index) {
+                return new ListTile(
+                  title: new Text(
+                    Employee[index].Name,
+                    style: new TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  dense: true,
+                  isThreeLine: false,
+                  subtitle: Text(Employee[index].EmployeeNumber +
+                      " | " +
+                      Employee[index].Designation),
+                  leading: CircleAvatar(
+                    child: Icon(Icons.perm_identity),
+                  ),
+                  onTap: () {
+                    Navigator.of(context).push(new MaterialPageRoute(
+                        builder: (BuildContext) => new EmployeeDetailsPage(
+                            employee: Employee[index])));
+                  },
+                );
+              },
+            );
+          } else {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        },
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Verification v = new Verification(
-          //     AssetNumber: DateTime.now().toString(),
-          //     Date: DateTime.now().toString(),
-          //     ImageUrl: "fddfg",
-          //     Location: "sdfsdf",
-          //     Type: "sdfsdf",
-          //     User: "sdfsdf");
-          // db.PostVerification(v).whenComplete(() {
-          //   _scaffoldKey.currentState.showSnackBar(SnackBar(
-          //     content: Text('Yay! Verification Posted!'),
-          //   ));
-          // });
+          showModalBottomSheet<Null>(
+            context: context,
+            builder: (BuildContext context) => const FilterDrawer(),
+          );
         },
         child: Icon(Icons.sort),
         backgroundColor: Colors.blueAccent,
@@ -86,56 +114,12 @@ class _VerificationsPageState extends State<VerificationsPage> {
       ),
     );
   }
-
-  FutureBuilder<List<Verification>> VerificationsList() {
-    return FutureBuilder<List<Verification>>(
-      future: getList(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          var v = snapshot.data;
-          return new ListView.builder(
-            itemCount: v == null ? 0 : v.length,
-            itemBuilder: (BuildContext context, int index) {
-              return new ListTile(
-                title: new Text(
-                  v[index].AssetNumber + " | " + v[index].EquipmentNumber,
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                subtitle: Text(v[index].AssetDescription),
-                dense: true,
-                leading: CircleAvatar(
-                  child: AvtarIcon(v, index),
-                ),
-                onTap: () {
-                  Navigator.of(context).push(new MaterialPageRoute(
-                      builder: (BuildContext) => new VerificationDetailsPage(
-                          verification: v[index])));
-                },
-              );
-            },
-          );
-        } else {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-      },
-    );
-  }
-
-  Icon AvtarIcon(List<Verification> v, int index) {
-    if (v[index].Type.substring(0, 1) == "P") {
-      return new Icon(Icons.camera_alt);
-    } else {
-      return new Icon(Icons.person);
-    }
-  }
 }
 
 //------------------------------------  Search  ------------------
 
-class _SearchDemoSearchDelegate extends SearchDelegate<Verification> {
-  final List<Verification> _history = <Verification>[];
+class _SearchDemoSearchDelegate extends SearchDelegate<Employee> {
+  final List<Employee> _history = <Employee>[];
 
   @override
   Widget buildLeading(BuildContext context) {
@@ -153,8 +137,8 @@ class _SearchDemoSearchDelegate extends SearchDelegate<Verification> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    final Iterable<Verification> suggestions =
-        query.isEmpty ? _history : SearchEquipments(query);
+    final Iterable<Employee> suggestions =
+        query.isEmpty ? _history : SearchEmployees(query);
     return new _SuggestionList(
       query: query,
       suggestions: suggestions.toList(),
@@ -167,7 +151,7 @@ class _SearchDemoSearchDelegate extends SearchDelegate<Verification> {
 
   @override
   Widget buildResults(BuildContext context) {
-    final List<Verification> finalequip = SearchEquipments(query);
+    final List<Employee> finalequip = SearchEmployees(query);
 
     if (finalequip == null || finalequip.length < 0) {
       return new Center(
@@ -181,28 +165,27 @@ class _SearchDemoSearchDelegate extends SearchDelegate<Verification> {
     return new ListView.builder(
       itemCount: finalequip.length,
       itemBuilder: (BuildContext context, int i) {
-        final Verification suggestion = finalequip[i];
+        final Employee suggestion = finalequip[i];
         return new ListTile(
           leading: query.isEmpty ? const Icon(Icons.history) : const Icon(null),
           title: new RichText(
             text: new TextSpan(
-              text: suggestion.AssetNumber.substring(0, query.length),
+              text: suggestion.Name.substring(0, query.length),
               style:
                   theme.textTheme.subhead.copyWith(fontWeight: FontWeight.bold),
               children: <TextSpan>[
                 new TextSpan(
-                  text: suggestion.AssetNumber.substring(query.length),
+                  text: suggestion.Name.substring(query.length),
                   style: theme.textTheme.subhead,
                 ),
               ],
             ),
           ),
-          subtitle:Text(finalequip[i].AssetDescription) ,
           onTap: () {
             this.close(context, finalequip[i]);
             Navigator.of(context).push(new MaterialPageRoute(
                 builder: (BuildContext) =>
-                    new VerificationDetailsPage(verification: finalequip[i])));
+                    new EmployeeDetailsPage(employee: finalequip[i])));
           },
         );
       },
@@ -231,19 +214,15 @@ class _SearchDemoSearchDelegate extends SearchDelegate<Verification> {
     ];
   }
 
-  List<Verification> SearchEquipments(String sq) {
+  List<Employee> SearchEmployees(String sq) {
     if (sq != null) {
-      var ss = Verifications.where((Verification i) =>
+      var ss = employees.where((Employee i) =>
           (i != null &&
-              i.EquipmentNumber != null &&
-              i.EquipmentNumber.toLowerCase().contains(sq.toLowerCase())) ||
-               (i != null &&
-              i.AssetDescription != null &&
-              i.AssetDescription.toLowerCase().contains(sq.toLowerCase())) ||
-              
+              i.Name != null &&
+              i.Name.toLowerCase().contains(sq.toLowerCase())) ||
           (i != null &&
-              i.AssetNumber != null &&
-              i.AssetNumber.toLowerCase().contains(sq.toLowerCase())));
+              i.EmployeeNumber != null &&
+              i.EmployeeNumber.toLowerCase().contains(sq.toLowerCase())));
 
       if (ss != null) {
         return ss.toList();
@@ -256,7 +235,7 @@ class _SearchDemoSearchDelegate extends SearchDelegate<Verification> {
 class _SuggestionList extends StatelessWidget {
   const _SuggestionList({this.suggestions, this.query, this.onSelected});
 
-  final List<Verification> suggestions;
+  final List<Employee> suggestions;
   final String query;
   final ValueChanged<String> onSelected;
 
@@ -266,11 +245,22 @@ class _SuggestionList extends StatelessWidget {
     return new ListView.builder(
       itemCount: suggestions.length,
       itemBuilder: (BuildContext context, int i) {
-        final String suggestion = suggestions[i].AssetNumber;
+        final String suggestion = suggestions[i].Name;
         return new ListTile(
           leading: query.isEmpty ? const Icon(Icons.history) : const Icon(null),
-          subtitle:Text( suggestions[i].AssetDescription),
-          title: Text( suggestion),
+          title: new RichText(
+            text: new TextSpan(
+              text: suggestion.substring(0, query.length),
+              style:
+                  theme.textTheme.subhead.copyWith(fontWeight: FontWeight.bold),
+              children: <TextSpan>[
+                new TextSpan(
+                  text: suggestion.substring(query.length),
+                  style: theme.textTheme.subhead,
+                ),
+              ],
+            ),
+          ),
           onTap: () {
             onSelected(suggestion);
           },
@@ -322,8 +312,8 @@ class CustomBottomAppBar extends StatelessWidget {
           Scaffold.of(context).showSnackBar(
             const SnackBar(content: Text('Updating database....')),
           );
-          Verifications.clear();
-          _VerificationsPageState.refreshList(context);
+          employees.clear();
+          _EmployeesPageState.refreshList(context);
         },
       ),
     ]);
@@ -360,8 +350,8 @@ class CustomSettingsDrawer extends StatelessWidget {
 
   Future<bool> RefreshDatabase() async {
     await db.DeleteEqdb();
-    await db.GetEquipmentsFromServer();
-    await db.SaveEquipmentToStorage();
+    await db.GetEmployeesFromServer();
+    await db.SaveEmployeesToStorage();
   }
 }
 
@@ -376,7 +366,7 @@ class FilterDrawer extends StatelessWidget {
           padding: const EdgeInsets.all(20.0),
           children: <Widget>[
             CheckboxListTile(
-              title: Text("WINCH UNITS"),
+              title: Text("ADCO"),
               onChanged: (bool value) {
                 TypeFilter(this);
               },
@@ -385,7 +375,7 @@ class FilterDrawer extends StatelessWidget {
               value: false,
             ),
             CheckboxListTile(
-              title: Text("POWER PACKS"),
+              title: Text("ADMA"),
               onChanged: (bool value) {
                 TypeFilter(this);
               },
@@ -394,7 +384,7 @@ class FilterDrawer extends StatelessWidget {
               value: false,
             ),
             CheckboxListTile(
-              title: Text("TRUCKS"),
+              title: Text("ZADCO"),
               onChanged: (bool value) {
                 TypeFilter(this);
               },
@@ -403,7 +393,7 @@ class FilterDrawer extends StatelessWidget {
               value: false,
             ),
             CheckboxListTile(
-              title: Text("TOOL BOXES"),
+              title: Text("TOTAL"),
               onChanged: (bool value) {
                 TypeFilter(this);
               },
@@ -412,7 +402,7 @@ class FilterDrawer extends StatelessWidget {
               value: false,
             ),
             CheckboxListTile(
-              title: Text("TOOL BASKETS"),
+              title: Text("BUNDUQ"),
               onChanged: (bool value) {
                 TypeFilter(this);
               },
@@ -421,7 +411,7 @@ class FilterDrawer extends StatelessWidget {
               value: false,
             ),
             CheckboxListTile(
-              title: Text("LUBRICATORS"),
+              title: Text("INDIA"),
               onChanged: (bool value) {
                 TypeFilter(this);
               },
@@ -430,7 +420,7 @@ class FilterDrawer extends StatelessWidget {
               value: false,
             ),
             CheckboxListTile(
-              title: Text("STUFFING BOXES"),
+              title: Text("KUWAIT"),
               onChanged: (bool value) {
                 TypeFilter(this);
               },
@@ -439,97 +429,7 @@ class FilterDrawer extends StatelessWidget {
               value: false,
             ),
             CheckboxListTile(
-              title: Text("BLOW POUT PREVENTERS"),
-              onChanged: (bool value) {
-                TypeFilter(this);
-              },
-              controlAffinity: ListTileControlAffinity.leading,
-              dense: true,
-              value: false,
-            ),
-            CheckboxListTile(
-              title: Text("INJECTION SUBS"),
-              onChanged: (bool value) {
-                TypeFilter(this);
-              },
-              controlAffinity: ListTileControlAffinity.leading,
-              dense: true,
-              value: false,
-            ),
-            CheckboxListTile(
-              title: Text("WINCH UNITS"),
-              onChanged: (bool value) {
-                TypeFilter(this);
-              },
-              controlAffinity: ListTileControlAffinity.leading,
-              dense: true,
-              value: false,
-            ),
-            CheckboxListTile(
-              title: Text("POWER PACKS"),
-              onChanged: (bool value) {
-                TypeFilter(this);
-              },
-              controlAffinity: ListTileControlAffinity.leading,
-              dense: true,
-              value: false,
-            ),
-            CheckboxListTile(
-              title: Text("TRUCKS"),
-              onChanged: (bool value) {
-                TypeFilter(this);
-              },
-              controlAffinity: ListTileControlAffinity.leading,
-              dense: true,
-              value: false,
-            ),
-            CheckboxListTile(
-              title: Text("TOOL BOXES"),
-              onChanged: (bool value) {
-                TypeFilter(this);
-              },
-              controlAffinity: ListTileControlAffinity.leading,
-              dense: true,
-              value: false,
-            ),
-            CheckboxListTile(
-              title: Text("TOOL BASKETS"),
-              onChanged: (bool value) {
-                TypeFilter(this);
-              },
-              controlAffinity: ListTileControlAffinity.leading,
-              dense: true,
-              value: false,
-            ),
-            CheckboxListTile(
-              title: Text("LUBRICATORS"),
-              onChanged: (bool value) {
-                TypeFilter(this);
-              },
-              controlAffinity: ListTileControlAffinity.leading,
-              dense: true,
-              value: false,
-            ),
-            CheckboxListTile(
-              title: Text("STUFFING BOXES"),
-              onChanged: (bool value) {
-                TypeFilter(this);
-              },
-              controlAffinity: ListTileControlAffinity.leading,
-              dense: true,
-              value: false,
-            ),
-            CheckboxListTile(
-              title: Text("BLOW POUT PREVENTERS"),
-              onChanged: (bool value) {
-                TypeFilter(this);
-              },
-              controlAffinity: ListTileControlAffinity.leading,
-              dense: true,
-              value: false,
-            ),
-            CheckboxListTile(
-              title: Text("INJECTION SUBS"),
+              title: Text("CALL OUT"),
               onChanged: (bool value) {
                 TypeFilter(this);
               },

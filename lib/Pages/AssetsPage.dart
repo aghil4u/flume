@@ -1,8 +1,8 @@
+import 'package:flume/Model/Equipment.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'AssetDetailsPage.dart';
-import 'Model/Equipment.dart';
-import 'Model/db.dart';
+import 'package:flume/Services/db.dart';
 
 var refreshKey = GlobalKey<ScaffoldState>();
 
