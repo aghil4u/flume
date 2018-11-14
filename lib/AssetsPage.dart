@@ -24,6 +24,11 @@ class _AssetsPageState extends State<AssetsPage> {
   @override
   void initState() {
     super.initState();
+    getList().then((onValue) {
+      setState(() {
+        equipmentsFilterdList = onValue;
+      });
+    });
     InitializeFilters();
   }
 
