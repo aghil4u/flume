@@ -455,15 +455,15 @@ class CustomBottomAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<Widget> rowContents = <Widget>[
-      new IconButton(
-        icon: const Icon(Icons.menu),
-        onPressed: () {
-          showModalBottomSheet<Null>(
-            context: context,
-            builder: (BuildContext context) => const CustomSettingsDrawer(),
-          );
-        },
-      ),
+      // new IconButton(
+      //   icon: const Icon(Icons.menu),
+      //   onPressed: () {
+      //     showModalBottomSheet<Null>(
+      //       context: context,
+      //       builder: (BuildContext context) => const CustomSettingsDrawer(),
+      //     );
+      //   },
+      // ),
     ];
 
     if (kCenterLocations.contains(fabLocation)) {

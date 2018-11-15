@@ -78,10 +78,10 @@ class _VerificationsPageState extends State<VerificationsPage> {
         child: Icon(Icons.sort),
         backgroundColor: Colors.blueAccent,
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       bottomNavigationBar: new CustomBottomAppBar(
         color: Colors.white,
-        fabLocation: FloatingActionButtonLocation.endDocked,
+        fabLocation: FloatingActionButtonLocation.endFloat,
         shape: CircularNotchedRectangle(),
       ),
     );
@@ -297,35 +297,35 @@ class CustomBottomAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<Widget> rowContents = <Widget>[
-      new IconButton(
-        icon: const Icon(Icons.menu),
-        onPressed: () {
-          showModalBottomSheet<Null>(
-            context: context,
-            builder: (BuildContext context) => const CustomSettingsDrawer(),
-          );
-        },
-      ),
+      // new IconButton(
+      //   icon: const Icon(Icons.menu),
+      //   onPressed: () {
+      //     showModalBottomSheet<Null>(
+      //       context: context,
+      //       builder: (BuildContext context) => const CustomSettingsDrawer(),
+      //     );
+      //   },
+      // ),
     ];
 
-    if (kCenterLocations.contains(fabLocation)) {
-      rowContents.add(
-        const Expanded(child: SizedBox()),
-      );
-    }
+    // if (kCenterLocations.contains(fabLocation)) {
+    //   rowContents.add(
+    //     const Expanded(child: SizedBox()),
+    //   );
+    // }
 
-    rowContents.addAll(<Widget>[
-      new IconButton(
-        icon: const Icon(Icons.refresh),
-        onPressed: () {
-          Scaffold.of(context).showSnackBar(
-            const SnackBar(content: Text('Updating database....')),
-          );
-          Verifications.clear();
-          _VerificationsPageState.refreshList(context);
-        },
-      ),
-    ]);
+    // rowContents.addAll(<Widget>[
+    //   new IconButton(
+    //     icon: const Icon(Icons.refresh),
+    //     onPressed: () {
+    //       Scaffold.of(context).showSnackBar(
+    //         const SnackBar(content: Text('Updating database....')),
+    //       );
+    //       Verifications.clear();
+    //       _VerificationsPageState.refreshList(context);
+    //     },
+    //   ),
+    // ]);
 
     return new BottomAppBar(
       color: color,
