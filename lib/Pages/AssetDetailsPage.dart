@@ -388,20 +388,20 @@ class VerificationDrawer extends StatelessWidget {
                     var position = null;
                     String location = "";
 
-                    print("---------trying to get location------");
+                    // print("---------trying to get location------");
                     //position = await Location().getLocation();
-                    if (position != null) {
-                      String location = " LAT:" +
-                          position["latitude"].toString() +
-                          " LON:" +
-                          position["longitude"].toString() +
-                          " ACCURACY:" +
-                          position["accuracy"].toString();
-                      print(location);
-                    } else {
-                      _assetDetailsScaffoldKey.currentState.showSnackBar(
-                          SnackBar(content: Text('No Access to Location ')));
-                    }
+                    // if (position != null) {
+                    //   String location = " LAT:" +
+                    //       position["latitude"].toString() +
+                    //       " LON:" +
+                    //       position["longitude"].toString() +
+                    //       " ACCURACY:" +
+                    //       position["accuracy"].toString();
+                    //   print(location);
+                    // } else {
+                    //   _assetDetailsScaffoldKey.currentState.showSnackBar(
+                    //       SnackBar(content: Text('No Access to Location ')));
+                    // }
 
                     Verification v = new Verification(
                         AssetNumber: e.AssetNumber,
@@ -416,6 +416,11 @@ class VerificationDrawer extends StatelessWidget {
                       _assetDetailsScaffoldKey.currentState
                           .showSnackBar(SnackBar(
                         content: Text('Yay! Verification Posted'),
+                      ));
+                    }).catchError((onError) {
+                      _assetDetailsScaffoldKey.currentState
+                          .showSnackBar(SnackBar(
+                        content: Text('Oops! Error' + onError.toString()),
                       ));
                     });
                   }
