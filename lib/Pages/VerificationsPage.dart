@@ -44,7 +44,10 @@ class _VerificationsPageState extends State<VerificationsPage> {
     return new Scaffold(
       key: _scaffoldKey,
       appBar: new AppBar(
-        title: new Text(_verificationsCount.toString() + " Verifications"),
+        title: new Text(_verificationsCount.toString() +
+            " Verifications " +
+            _verifiedAssetsCount.toString() +
+            " Assets"),
         actions: <Widget>[
           new IconButton(
             tooltip: 'Search',
