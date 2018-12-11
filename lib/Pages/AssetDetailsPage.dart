@@ -387,7 +387,7 @@ class VerificationDrawer extends StatelessWidget {
                     var position = null;
                     String location = "Base";
 
-                    print("---------trying to get location------");
+                    // print("---------trying to get location------");
                     //position = await Location().getLocation();
                     // if (position != null) {
                     //   String location = " LAT:" +
@@ -415,6 +415,11 @@ class VerificationDrawer extends StatelessWidget {
                       _assetDetailsScaffoldKey.currentState
                           .showSnackBar(SnackBar(
                         content: Text('Yay! Verification Posted'),
+                      ));
+                    }).catchError((onError) {
+                      _assetDetailsScaffoldKey.currentState
+                          .showSnackBar(SnackBar(
+                        content: Text('Oops! Error' + onError.toString()),
                       ));
                     });
                   }
