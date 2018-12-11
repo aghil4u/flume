@@ -16,15 +16,19 @@ class VerificationsPage extends StatefulWidget {
 class _VerificationsPageState extends State<VerificationsPage> {
   final _SearchDemoSearchDelegate _delegate = new _SearchDemoSearchDelegate();
   Verification selectedEquipment;
+  var _verificationsCount = 0;
+  var _verifiedAssetsCount = 0;
 
-  static Future<List<Verification>> getList() async {
-    //  if (Verifications == null) {
-    // await Future.delayed(Duration(seconds: 1));
-
+  Future<List<Verification>> getList() async {
     await db.GetVerificationsFromServer();
 
     Verifications = db.Verifications;
-    // }
+
+    setState(() {
+      _verificationsCount = Verifications.length;
+      _verifiedAssetsCount =
+          Verifications.map((f) => f.AssetNumber).toSet().length;
+    });
 
     return Verifications;
   }
@@ -40,7 +44,7 @@ class _VerificationsPageState extends State<VerificationsPage> {
     return new Scaffold(
       key: _scaffoldKey,
       appBar: new AppBar(
-        title: new Text("Verifications"),
+        title: new Text(_verificationsCount.toString() + " Verifications"),
         actions: <Widget>[
           new IconButton(
             tooltip: 'Search',
