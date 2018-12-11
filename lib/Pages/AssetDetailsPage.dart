@@ -375,33 +375,32 @@ class VerificationDrawer extends StatelessWidget {
                 child: InkWell(
               onTap: () async {
                 File image = await ImagePicker.pickImage(
-                  source: ImageSource.camera,
-                );
+                    source: ImageSource.camera, maxHeight: 500);
                 if (image != null && image.path != null) {
                   Navigator.of(context).pop();
                   print("---------------trying to upload-------------- ");
-                  var value = await db.compressAndUpload(image);
+                  var value = await db.UploadImage(image);
 
                   if (value != null) {
                     print(value);
 
                     var position = null;
-                    String location = "";
+                    String location = "Base";
 
                     print("---------trying to get location------");
                     //position = await Location().getLocation();
-                    if (position != null) {
-                      String location = " LAT:" +
-                          position["latitude"].toString() +
-                          " LON:" +
-                          position["longitude"].toString() +
-                          " ACCURACY:" +
-                          position["accuracy"].toString();
-                      print(location);
-                    } else {
-                      _assetDetailsScaffoldKey.currentState.showSnackBar(
-                          SnackBar(content: Text('No Access to Location ')));
-                    }
+                    // if (position != null) {
+                    //   String location = " LAT:" +
+                    //       position["latitude"].toString() +
+                    //       " LON:" +
+                    //       position["longitude"].toString() +
+                    //       " ACCURACY:" +
+                    //       position["accuracy"].toString();
+                    //   print(location);
+                    // } else {
+                    //   _assetDetailsScaffoldKey.currentState.showSnackBar(
+                    //       SnackBar(content: Text('No Access to Location ')));
+                    // }
 
                     Verification v = new Verification(
                         AssetNumber: e.AssetNumber,
@@ -443,12 +442,11 @@ class VerificationDrawer extends StatelessWidget {
                 child: InkWell(
               onTap: () async {
                 File image = await ImagePicker.pickImage(
-                  source: ImageSource.gallery,
-                );
+                    source: ImageSource.gallery, maxHeight: 500);
                 if (image != null && image.path != null) {
                   Navigator.of(context).pop();
                   print("---------------trying to upload-------------- ");
-                  var value = await db.compressAndUpload(image);
+                  var value = await db.UploadImage(image);
 
                   if (value != null) {
                     print(value);
