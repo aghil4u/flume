@@ -99,12 +99,12 @@ class HomePage extends StatelessWidget {
                   children: <Widget>[
                     Center(
                       child: Icon(
-                        Icons.location_searching,
+                        Icons.pie_chart,
                         size: 50.0,
                       ),
                     ),
                     Row(
-                      children: <Widget>[Text("Locations")],
+                      children: <Widget>[Text("Status Report")],
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.end,
                     )

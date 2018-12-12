@@ -19,6 +19,7 @@ class AssetDetailsPage extends StatefulWidget {
 class _AssetDetailsPageState extends State<AssetDetailsPage>
     with SingleTickerProviderStateMixin {
   TabController controller;
+  String Username;
 
   @override
   void initState() {
@@ -410,7 +411,7 @@ class VerificationDrawer extends StatelessWidget {
                         ImageUrl: value,
                         Location: location,
                         Type: "PhotoVerification",
-                        User: "DefaultUser");
+                        User: "Aghil K Mohan");
                     db.PostVerification(v).whenComplete(() {
                       _assetDetailsScaffoldKey.currentState
                           .showSnackBar(SnackBar(
@@ -463,7 +464,7 @@ class VerificationDrawer extends StatelessWidget {
                         ImageUrl: value,
                         Location: "",
                         Type: "PhotoVerification",
-                        User: "DefaultUser");
+                        User: "Aghil K Mohan");
                     db.PostVerification(v).whenComplete(() {
                       _assetDetailsScaffoldKey.currentState
                           .showSnackBar(SnackBar(
@@ -503,7 +504,7 @@ class VerificationDrawer extends StatelessWidget {
                     ImageUrl: "---",
                     Location: "",
                     Type: "PointVerification",
-                    User: "DefaultUser");
+                    User: "Aghil K Mohan");
                 db.PostVerification(v).whenComplete(() {
                   _assetDetailsScaffoldKey.currentState.showSnackBar(SnackBar(
                     content: Text('Yay! Verification Posted'),

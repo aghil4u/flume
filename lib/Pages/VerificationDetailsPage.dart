@@ -24,7 +24,8 @@ class _AssetDetailsPageState extends State<VerificationDetailsPage> {
         label: Text("Delete"),
         onPressed: () async {
           Navigator.of(context).pop();
-          db.DeleteVerficationFromServer(widget.verification.id);
+
+          // db.DeleteVerficationFromServer(widget.verification.id);
         },
       ),
       body: NestedScrollView(
