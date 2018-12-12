@@ -18,6 +18,7 @@ class _VerificationsPageState extends State<VerificationsPage> {
   Verification selectedEquipment;
   var _verificationsCount = 0;
   var _verifiedAssetsCount = 0;
+  var _verifiedValue = 0;
 
   Future<List<Verification>> getList() async {
     await db.GetVerificationsFromServer();
@@ -28,6 +29,7 @@ class _VerificationsPageState extends State<VerificationsPage> {
       _verificationsCount = Verifications.length;
       _verifiedAssetsCount =
           Verifications.map((f) => f.AssetNumber).toSet().length;
+      _verifiedValue = 0;
     });
 
     return Verifications;
@@ -44,10 +46,7 @@ class _VerificationsPageState extends State<VerificationsPage> {
     return new Scaffold(
       key: _scaffoldKey,
       appBar: new AppBar(
-        title: new Text(_verificationsCount.toString() +
-            " Verifications " +
-            _verifiedAssetsCount.toString() +
-            " Assets"),
+        title: new Text(" Verifications "),
         actions: <Widget>[
           new IconButton(
             tooltip: 'Search',
@@ -69,20 +68,13 @@ class _VerificationsPageState extends State<VerificationsPage> {
       body: VerificationsList(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Verification v = new Verification(
-          //     AssetNumber: DateTime.now().toString(),
-          //     Date: DateTime.now().toString(),
-          //     ImageUrl: "fddfg",
-          //     Location: "sdfsdf",
-          //     Type: "sdfsdf",
-          //     User: "sdfsdf");
-          // db.PostVerification(v).whenComplete(() {
-          //   _scaffoldKey.currentState.showSnackBar(SnackBar(
-          //     content: Text('Yay! Verification Posted!'),
-          //   ));
-          // });
+          showModalBottomSheet<Null>(
+            context: context,
+            builder: (BuildContext) => new DetailsDrawer(
+                _verificationsCount, _verifiedAssetsCount, _verifiedValue),
+          );
         },
-        child: Icon(Icons.sort),
+        child: Icon(Icons.pie_chart),
         backgroundColor: Colors.blueAccent,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
@@ -371,181 +363,69 @@ class CustomSettingsDrawer extends StatelessWidget {
   }
 }
 
-class FilterDrawer extends StatelessWidget {
-  const FilterDrawer();
+class DetailsDrawer extends StatelessWidget {
+  final verificationCount;
+  final verifiedAssetsCount;
+  final verifiedValue;
+
+  const DetailsDrawer(
+      this.verificationCount, this.verifiedAssetsCount, this.verifiedValue);
 
   @override
   Widget build(BuildContext context) {
     return new Drawer(
-        elevation: 1.0,
-        child: ListView(
-          padding: const EdgeInsets.all(20.0),
-          children: <Widget>[
-            CheckboxListTile(
-              title: Text("WINCH UNITS"),
-              onChanged: (bool value) {
-                TypeFilter(this);
-              },
-              controlAffinity: ListTileControlAffinity.leading,
-              dense: true,
-              value: false,
-            ),
-            CheckboxListTile(
-              title: Text("POWER PACKS"),
-              onChanged: (bool value) {
-                TypeFilter(this);
-              },
-              controlAffinity: ListTileControlAffinity.leading,
-              dense: true,
-              value: false,
-            ),
-            CheckboxListTile(
-              title: Text("TRUCKS"),
-              onChanged: (bool value) {
-                TypeFilter(this);
-              },
-              controlAffinity: ListTileControlAffinity.leading,
-              dense: true,
-              value: false,
-            ),
-            CheckboxListTile(
-              title: Text("TOOL BOXES"),
-              onChanged: (bool value) {
-                TypeFilter(this);
-              },
-              controlAffinity: ListTileControlAffinity.leading,
-              dense: true,
-              value: false,
-            ),
-            CheckboxListTile(
-              title: Text("TOOL BASKETS"),
-              onChanged: (bool value) {
-                TypeFilter(this);
-              },
-              controlAffinity: ListTileControlAffinity.leading,
-              dense: true,
-              value: false,
-            ),
-            CheckboxListTile(
-              title: Text("LUBRICATORS"),
-              onChanged: (bool value) {
-                TypeFilter(this);
-              },
-              controlAffinity: ListTileControlAffinity.leading,
-              dense: true,
-              value: false,
-            ),
-            CheckboxListTile(
-              title: Text("STUFFING BOXES"),
-              onChanged: (bool value) {
-                TypeFilter(this);
-              },
-              controlAffinity: ListTileControlAffinity.leading,
-              dense: true,
-              value: false,
-            ),
-            CheckboxListTile(
-              title: Text("BLOW POUT PREVENTERS"),
-              onChanged: (bool value) {
-                TypeFilter(this);
-              },
-              controlAffinity: ListTileControlAffinity.leading,
-              dense: true,
-              value: false,
-            ),
-            CheckboxListTile(
-              title: Text("INJECTION SUBS"),
-              onChanged: (bool value) {
-                TypeFilter(this);
-              },
-              controlAffinity: ListTileControlAffinity.leading,
-              dense: true,
-              value: false,
-            ),
-            CheckboxListTile(
-              title: Text("WINCH UNITS"),
-              onChanged: (bool value) {
-                TypeFilter(this);
-              },
-              controlAffinity: ListTileControlAffinity.leading,
-              dense: true,
-              value: false,
-            ),
-            CheckboxListTile(
-              title: Text("POWER PACKS"),
-              onChanged: (bool value) {
-                TypeFilter(this);
-              },
-              controlAffinity: ListTileControlAffinity.leading,
-              dense: true,
-              value: false,
-            ),
-            CheckboxListTile(
-              title: Text("TRUCKS"),
-              onChanged: (bool value) {
-                TypeFilter(this);
-              },
-              controlAffinity: ListTileControlAffinity.leading,
-              dense: true,
-              value: false,
-            ),
-            CheckboxListTile(
-              title: Text("TOOL BOXES"),
-              onChanged: (bool value) {
-                TypeFilter(this);
-              },
-              controlAffinity: ListTileControlAffinity.leading,
-              dense: true,
-              value: false,
-            ),
-            CheckboxListTile(
-              title: Text("TOOL BASKETS"),
-              onChanged: (bool value) {
-                TypeFilter(this);
-              },
-              controlAffinity: ListTileControlAffinity.leading,
-              dense: true,
-              value: false,
-            ),
-            CheckboxListTile(
-              title: Text("LUBRICATORS"),
-              onChanged: (bool value) {
-                TypeFilter(this);
-              },
-              controlAffinity: ListTileControlAffinity.leading,
-              dense: true,
-              value: false,
-            ),
-            CheckboxListTile(
-              title: Text("STUFFING BOXES"),
-              onChanged: (bool value) {
-                TypeFilter(this);
-              },
-              controlAffinity: ListTileControlAffinity.leading,
-              dense: true,
-              value: false,
-            ),
-            CheckboxListTile(
-              title: Text("BLOW POUT PREVENTERS"),
-              onChanged: (bool value) {
-                TypeFilter(this);
-              },
-              controlAffinity: ListTileControlAffinity.leading,
-              dense: true,
-              value: false,
-            ),
-            CheckboxListTile(
-              title: Text("INJECTION SUBS"),
-              onChanged: (bool value) {
-                TypeFilter(this);
-              },
-              controlAffinity: ListTileControlAffinity.leading,
-              dense: true,
-              value: false,
-            ),
-          ],
+        elevation: 10.0,
+        child: Container(
+          child: ListView(
+            padding: const EdgeInsets.all(20.0),
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    "DETAILS",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  )
+                ],
+              ),
+              Divider(
+                height: 20,
+              ),
+              Padding(
+                padding: EdgeInsets.all(10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
+                      "NUMBER OF VERIFICATIONS :",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      verificationCount.toString(),
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    )
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
+                      "NUMBER OF ASSETS VERIFIED :",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      verifiedAssetsCount.toString(),
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
         ));
   }
-
-  void TypeFilter(FilterDrawer searchDrawer) {}
 }
