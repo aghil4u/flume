@@ -14,15 +14,20 @@ List<Equipment> equipmentsMasterList;
 List<Equipment> equipmentsFilterdList;
 
 class AssetsPage extends StatefulWidget {
+  final String username;
+
+  const AssetsPage({Key key, this.username}) : super(key: key);
   _AssetsPageState createState() => _AssetsPageState();
 }
 
 class _AssetsPageState extends State<AssetsPage> {
-  final _SearchDemoSearchDelegate _delegate = new _SearchDemoSearchDelegate();
   Equipment selectedEquipment;
 
+  static _SearchDemoSearchDelegate _delegate;
   @override
   void initState() {
+    _SearchDemoSearchDelegate _delegate =
+        new _SearchDemoSearchDelegate(widget.username);
     super.initState();
     getList().then((onValue) {
       setState(() {
@@ -102,8 +107,10 @@ class _AssetsPageState extends State<AssetsPage> {
                   ),
                   onTap: () {
                     Navigator.of(context).push(new MaterialPageRoute(
-                        builder: (BuildContext) =>
-                            new AssetDetailsPage(equipment: equipment[index])));
+                        builder: (BuildContext) => new AssetDetailsPage(
+                              equipment: equipment[index],
+                              username: widget.username,
+                            )));
                   },
                 );
               },
@@ -298,7 +305,10 @@ class _FilterDrawerState extends State<FilterDrawer> {
 //------------------------------------  Search  ------------------
 
 class _SearchDemoSearchDelegate extends SearchDelegate<Equipment> {
+  final String username;
   final List<Equipment> _history = <Equipment>[];
+
+  _SearchDemoSearchDelegate(this.username);
 
   @override
   Widget buildLeading(BuildContext context) {
@@ -324,8 +334,8 @@ class _SearchDemoSearchDelegate extends SearchDelegate<Equipment> {
       onSelected: (Equipment suggestion) {
         close(context, suggestion);
         Navigator.of(context).push(new MaterialPageRoute(
-            builder: (BuildContext) =>
-                new AssetDetailsPage(equipment: suggestion)));
+            builder: (BuildContext) => new AssetDetailsPage(
+                equipment: suggestion, username: username)));
       },
     );
   }
@@ -357,8 +367,10 @@ class _SearchDemoSearchDelegate extends SearchDelegate<Equipment> {
           onTap: () {
             this.close(context, finalequip[i]);
             Navigator.of(context).push(new MaterialPageRoute(
-                builder: (BuildContext) =>
-                    new AssetDetailsPage(equipment: finalequip[i])));
+                builder: (BuildContext) => new AssetDetailsPage(
+                      equipment: finalequip[i],
+                      username: username,
+                    )));
           },
         );
       },

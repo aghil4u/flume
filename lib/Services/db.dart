@@ -14,10 +14,29 @@ import 'package:path_provider/path_provider.dart';
 import 'package:image/image.dart' as Im;
 import 'dart:math' as Math;
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 class db {
   static List<Equipment> Equipments;
   static List<Verification> Verifications;
   static List<Employee> Employees;
+
+  static Future<String> GetLocalData(String variable) async {
+    var pref = await SharedPreferences.getInstance();
+    return pref.get(variable);
+  }
+
+  static Future<bool> SetLocalData(String variable, String value) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString(variable, value);
+    return true;
+  }
+
+  static Future<bool> DeleteLocalData(String variable) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.remove(variable);
+    return true;
+  }
 
   static List<Equipment> DecodeEquipments(String responseBody) {
     final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();

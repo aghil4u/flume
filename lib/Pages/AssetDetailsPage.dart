@@ -9,8 +9,9 @@ import 'package:flume/Services/db.dart';
 GlobalKey<ScaffoldState> _assetDetailsScaffoldKey = new GlobalKey();
 
 class AssetDetailsPage extends StatefulWidget {
+  final String username;
   final Equipment equipment;
-  AssetDetailsPage({this.equipment});
+  AssetDetailsPage({this.equipment, this.username});
 
   @override
   _AssetDetailsPageState createState() => _AssetDetailsPageState();
@@ -19,7 +20,6 @@ class AssetDetailsPage extends StatefulWidget {
 class _AssetDetailsPageState extends State<AssetDetailsPage>
     with SingleTickerProviderStateMixin {
   TabController controller;
-  String Username;
 
   @override
   void initState() {
@@ -36,7 +36,7 @@ class _AssetDetailsPageState extends State<AssetDetailsPage>
         onPressed: () {
           showModalBottomSheet<Null>(
             builder: (BuildContext context) =>
-                VerificationDrawer(widget.equipment),
+                VerificationDrawer(widget.equipment, widget.username),
             context: context,
           );
         },
@@ -360,8 +360,9 @@ class _AssetDetailsPageState extends State<AssetDetailsPage>
 
 //-----------------------------------------------------------------------------------------------------
 class VerificationDrawer extends StatelessWidget {
+  final username;
   final Equipment e;
-  VerificationDrawer(this.e);
+  VerificationDrawer(this.e, this.username);
 
   @override
   Widget build(BuildContext context) {
@@ -411,7 +412,7 @@ class VerificationDrawer extends StatelessWidget {
                         ImageUrl: value,
                         Location: location,
                         Type: "PhotoVerification",
-                        User: "Aghil K Mohan");
+                        User: username);
                     db.PostVerification(v).whenComplete(() {
                       _assetDetailsScaffoldKey.currentState
                           .showSnackBar(SnackBar(
@@ -464,7 +465,7 @@ class VerificationDrawer extends StatelessWidget {
                         ImageUrl: value,
                         Location: "",
                         Type: "PhotoVerification",
-                        User: "Aghil K Mohan");
+                        User: username);
                     db.PostVerification(v).whenComplete(() {
                       _assetDetailsScaffoldKey.currentState
                           .showSnackBar(SnackBar(
@@ -504,7 +505,7 @@ class VerificationDrawer extends StatelessWidget {
                     ImageUrl: "---",
                     Location: "",
                     Type: "PointVerification",
-                    User: "Aghil K Mohan");
+                    User: username);
                 db.PostVerification(v).whenComplete(() {
                   _assetDetailsScaffoldKey.currentState.showSnackBar(SnackBar(
                     content: Text('Yay! Verification Posted'),

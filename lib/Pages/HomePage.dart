@@ -1,10 +1,16 @@
+import 'dart:io';
+
 import 'package:flume/Pages/AssetsPage.dart';
 import 'package:flume/Pages/EmployeesPage.dart';
 import 'package:flume/Pages/VerificationsPage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flume/Services/db.dart';
 
 class HomePage extends StatelessWidget {
+  final String username;
+  HomePage(String username) : username = username;
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -16,12 +22,28 @@ class HomePage extends StatelessWidget {
         child: new ListView(
           children: <Widget>[
             new UserAccountsDrawerHeader(
-                accountName: new Text("Aghil"),
-                accountEmail: new Text("amohandas@almansoori.biz"),
-                currentAccountPicture: new CircleAvatar(
-                  backgroundColor: Colors.white,
-                  child: new Text("A"),
+                accountName: new Text(username.toUpperCase()),
+                accountEmail: new Text("ALMANSOORI WIRELINE SERVICES"),
+                currentAccountPicture: Image.asset(
+                  'Images/logo.png',
                 )),
+            Flex(
+              direction: Axis.vertical,
+              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
+                MaterialButton(
+                  onPressed: () {
+                    db.DeleteLocalData("username").then((onValue) {
+                      exit(0);
+                    });
+                  },
+                  child: Center(
+                    child: Text("Log Out"),
+                  ),
+                )
+              ],
+            )
           ],
         ),
       ),
@@ -34,7 +56,9 @@ class HomePage extends StatelessWidget {
           GestureDetector(
             onTap: () {
               Navigator.of(context).push(new MaterialPageRoute(
-                  builder: (BuildContext) => new AssetsPage()));
+                  builder: (BuildContext) => new AssetsPage(
+                        username: username,
+                      )));
             },
             child: Container(
               padding: EdgeInsets.all(10.0),

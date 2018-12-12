@@ -1,6 +1,7 @@
 import 'package:flume/Pages/HomePage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flume/Services/db.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -13,6 +14,8 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    ForwardIfLoggedin(context);
+
     final email = TextField(
       keyboardType: TextInputType.emailAddress,
       autofocus: false,
@@ -39,9 +42,13 @@ class _LoginPageState extends State<LoginPage> {
         minWidth: 200.0,
         height: 42.0,
         onPressed: () {
-          if (username.trim() == "admin" && pswd.trim() == "admin") {
-            Navigator.of(context).pushReplacement(new MaterialPageRoute(
-                builder: (BuildContext) => new HomePage()));
+          if (username.trim() != "" && pswd.trim() == "tx9pcydwd9dwd9") {
+            db.SetLocalData("username", username).then((onValue) {
+              if (onValue) {
+                Navigator.of(context).pushReplacement(new MaterialPageRoute(
+                    builder: (BuildContext) => new HomePage(username)));
+              }
+            });
           }
         },
         color: Colors.blue,
@@ -98,5 +105,17 @@ class _LoginPageState extends State<LoginPage> {
             ],
           ),
         ));
+  }
+
+  void ForwardIfLoggedin(BuildContext context) async {
+    String us = await db.GetLocalData("username");
+
+    if (us != null) {
+      setState(() {
+        Navigator.of(context)
+          ..pushReplacement(new MaterialPageRoute(
+              builder: (BuildContext) => new HomePage(us)));
+      });
+    } else {}
   }
 }

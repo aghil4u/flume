@@ -1,5 +1,6 @@
 import 'package:flume/Pages/HomePage.dart';
 import 'package:flutter/material.dart';
+import 'Pages/LoginPage.dart';
 
 void main() => runApp(new MyApp());
 
@@ -9,7 +10,7 @@ class MyApp extends StatelessWidget {
     return new MaterialApp(
       theme: new ThemeData(primarySwatch: Colors.blue),
       //home: new LoginPage(),
-      home: new HomePage(),
+      home: new LoginPage(),
     );
   }
 }
