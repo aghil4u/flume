@@ -24,10 +24,9 @@ class _AssetsPageState extends State<AssetsPage> {
   Equipment selectedEquipment;
 
   static _SearchDemoSearchDelegate _delegate;
+
   @override
   void initState() {
-    _SearchDemoSearchDelegate _delegate =
-        new _SearchDemoSearchDelegate(widget.username);
     super.initState();
     getList().then((onValue) {
       setState(() {
@@ -62,6 +61,8 @@ class _AssetsPageState extends State<AssetsPage> {
 
   @override
   Widget build(BuildContext context) {
+    _SearchDemoSearchDelegate _delegate =
+        new _SearchDemoSearchDelegate(widget.username);
     return new Scaffold(
       key: refreshKey,
       appBar: new AppBar(
