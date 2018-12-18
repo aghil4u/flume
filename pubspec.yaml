@@ -26,6 +26,7 @@ dependencies:
   ? url_launcher
   ? http
   shared_preferences:
+  photo_view:
 
 dev_dependencies:
   flutter_test:

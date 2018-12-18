@@ -54,11 +54,18 @@ class _AssetDetailsPhotosTabState
           var v = snapshot.data;
           return Padding(
 
-            padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+            padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
             child: GridView.builder(
             itemCount: v == null ? 0 : v.length,
             itemBuilder: (BuildContext context, int index) {
-              return new GridTile(
+             return InkWell(
+               splashColor: Colors.orange,
+               onTap: (){
+                    Navigator.of(context).push(new MaterialPageRoute(
+                      builder: (BuildContext) =>
+                          new VerificationDetailsPage(verification: v[index])));
+               },
+                child:   GridTile(
               
                 //footer: Text(v[index].Date),
                child: FadeInImage.assetNetwork(
@@ -68,8 +75,9 @@ class _AssetDetailsPhotosTabState
                  placeholder: "",
                  fit: BoxFit.cover,
                ),
+              ),
               );
-            }, gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, crossAxisSpacing: 10,mainAxisSpacing: 10),
+            }, gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, crossAxisSpacing: 5,mainAxisSpacing: 5),
           ),
           );
         } else {
