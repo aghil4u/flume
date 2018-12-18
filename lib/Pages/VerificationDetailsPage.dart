@@ -205,7 +205,7 @@ class _AssetDetailsPageState extends State<VerificationDetailsPage> {
                                 Text("VERIFIED BY",
                                     style: TextStyle(
                                         fontSize: 15.0, color: Colors.grey)),
-                                Text("widget.verification.User",
+                                Text(widget.verification.User,
                                     style: TextStyle(
                                         fontSize: 15.0, color: Colors.black)),
                               ],

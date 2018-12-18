@@ -1,5 +1,6 @@
 import 'package:flume/Model/Equipment.dart';
 import 'package:flume/Model/Verification.dart';
+import 'package:flume/Pages/AssetDetailsPhotosTab.dart';
 import 'package:flume/Pages/AssetDetailsVerificationsTab.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -78,7 +79,7 @@ class _AssetDetailsPageState extends State<AssetDetailsPage>
   }
 
   Widget PhotosTab() {
-    return Text("Photos");
+    return AssetDetailsPhotosTab( AssetNumberReference: widget.equipment.AssetNumber,);
   }
 
   Widget VerificationsTab() {
